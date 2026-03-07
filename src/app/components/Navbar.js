@@ -1,12 +1,12 @@
+import Image from "next/image";
 import logo from "../assets/logo.png";
-import styles from "../globals.css";
 
 export default function Navbar() {
     return (
         <nav className="nav">
       <div className="nav__wrapper">
         <figure className="nav__img--mask">
-          <img className="nav__img" src={logo} alt="logo" />
+          <Image className="nav__img" src={logo} alt="logo" priority />
         </figure>
         <ul className="nav__list--wrapper">
           <li className="nav__list nav__list--login">Login</li>
