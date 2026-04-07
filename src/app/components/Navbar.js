@@ -1,7 +1,7 @@
 import Image from "next/image";
 import logo from "../assets/logo.png";
 
-export default function Navbar() {
+export default function Navbar({ onLoginClick }) {
     return (
         <nav className="nav">
       <div className="nav__wrapper">
@@ -9,7 +9,9 @@ export default function Navbar() {
           <Image className="nav__img" src={logo} alt="logo" priority />
         </figure>
         <ul className="nav__list--wrapper">
-          <li className="nav__list nav__list--login">Login</li>
+          <li className="nav__list nav__list--login" onClick={onLoginClick}>
+            Login
+          </li>
           <li className="nav__list nav__list--mobile">About</li>
           <li className="nav__list nav__list--mobile">Contact</li>
           <li className="nav__list nav__list--mobile">Help</li>
