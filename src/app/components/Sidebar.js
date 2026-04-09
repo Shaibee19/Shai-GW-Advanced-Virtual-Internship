@@ -1,7 +1,17 @@
+"use client";
+
+import { useEffect, useState } from "react";
+
 export default function Sidebar() {
+  const [isOpen, setIsOpen] = useState(false);
+
+  const openSidebar = () => setIsOpen(true);
+  const closeSidebar = () => setIsOpen(false);
+
   return (
     <>
       <div className="sidebar__toggle--btn">
+        {/* Hamburger Icon */}
         <svg
           stroke="currentColor"
           fill="none"
@@ -25,9 +35,14 @@ export default function Sidebar() {
           ></path>
         </svg>
       </div>
+      {/* OVERLAY */}
+      <div
+        className={`sidebar__overlay ${isOpen ? "" : "sidebar__overlay--hidden"}`}
+        onClick={closeSidebar}
+      ></div>
 
-      <div className="sidebar__overlay sidebar__overlay--hidden"></div>
-      <div className="sidebar sidebar--closed">
+      {/* SIDEBAR */}
+      <div className={`sidebar ${isOpen ? "sidebar--opened" : "sidebar--closed"}`}>
         <div className="sidebar__logo">
           <img
             alt=""
@@ -38,7 +53,7 @@ export default function Sidebar() {
             decoding="async"
             data-nimg="1"
             loading="lazy"
-            // style="color:transparent"
+            style={{ color: "transparent" }}
           />
         </div>
         <div className="sidebar__wrapper">

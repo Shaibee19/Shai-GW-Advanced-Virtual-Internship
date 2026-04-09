@@ -13,7 +13,8 @@ export default function Selected() {
           "https://us-central1-summaristt.cloudfunctions.net/getBooks?status=selected"
         );
         const data = await response.json();
-        setBook(data);
+        console.log(data)
+        setBook(data[0]);
       } catch (error) {
         console.error("Error fetching selected book:", error);
       } finally {
