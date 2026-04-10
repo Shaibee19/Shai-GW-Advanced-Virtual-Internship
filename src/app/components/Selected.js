@@ -37,7 +37,7 @@ export default function Selected() {
 
       {/* SELECTED BOOK */}
       {!loading && book && (
-        <a className="selected__book" href={`/books/${book.id}`}>
+        <a className="selected__book" href={`/book/${book.id}`}>
         <audio src={book.audioLink}></audio>
         <div className="selected__book--sub-title">
           {book.subTitle}

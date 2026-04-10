@@ -773,6 +773,62 @@ button:disabled {
     height: 16px;
 }
 
+/* BOOK */
+
+.book__page {
+  display: flex;
+  gap: 40px;
+  margin-top: 40px;
+}
+
+.book__page--left {
+  flex: 2;
+}
+
+.book__page--right {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.book__image--wrapper-large {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+.book__image-large {
+  width: 260px;
+  height: auto;
+}
+
+.book__actions {
+  display: flex;
+  gap: 12px;
+  margin: 20px 0;
+}
+
+.book__tag {
+  background: #f3f4f6;
+  padding: 6px 12px;
+  border-radius: 20px;
+  margin-right: 8px;
+  font-size: 14px;
+}
+
+.keyidea {
+  margin-bottom: 16px;
+  border: 1px solid #e5e7eb;
+  padding: 12px;
+  border-radius: 8px;
+}
+
+.keyidea summary {
+  cursor: pointer;
+  font-weight: 600;
+}
+
 /* FOOTER */
 
 #footer {
