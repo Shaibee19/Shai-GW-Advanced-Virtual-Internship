@@ -1,13 +1,42 @@
+"use client";
+
 import Searchbar from "@/app/components/Searchbar";
 import Sidebar from "@/app/components/Sidebar";
+import { useEffect, useState } from "react";
+import { useParams } from "next/navigation";
 
-const Page = () => {
+export default function Library() {
+  const { id } = useParams();
+  const [book, setBook] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    async function fetchBook() {
+      try {
+        const res = await fetch(
+          `https://us-central1-summaristt.cloudfunctions.net/getBook?id=${id}`,
+        );
+        const data = await res.json();
+        setBook(data);
+      } catch (err) {
+        console.error(err);
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    fetchBook();
+  }, [id]);
+
+  if (loading) return <div className="inner__book--skeleton">Loading…</div>;
+  if (!book) return <div>Book not found</div>;
+  
   return (
     <>
       <div id="__next">
         <div className="wrapper">
           <div className="page__layout">
-            <Sidebar isOpen={isOpen} />
+            <Sidebar />
 
             <div className="page__content">
               <Searchbar />
@@ -1071,5 +1100,3 @@ const Page = () => {
     </>
   );
 };
-
-export default Page;
