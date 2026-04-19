@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { IoPersonSharp } from "react-icons/io5";
 import Image from "next/image";
 import google from "../assets/google.png";
