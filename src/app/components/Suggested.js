@@ -77,7 +77,7 @@ export default function Suggested() {
                   className="book__image"
                   src={book.imageLink}
                   alt={book.title}
-                  style={{ display: "block;" }}
+                  style={{ display: "block" }}
                 />
               </figure>
               <div className="recommended__book--title">{book.title}</div>
