@@ -129,7 +129,7 @@ export default function Recommended() {
 
               {/* PREMIUM PILL */}
               {book.subscriptionRequired && (
-                <div className="premium-pill">{book.subscriptionRequired}</div>
+                <div className="premium__pill">Premium</div>
               )}
             </a>
           ))}
