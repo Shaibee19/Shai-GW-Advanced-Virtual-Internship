@@ -6,10 +6,10 @@ import Image from "next/image";
 import logo from "../assets/logo.png";
 
 export default function Sidebar({
-  mode,
-  setMode,
-  onLoginClick,
-  onLogoutClick,
+  // mode,
+  // setMode,
+  // onLoginClick,
+  // onLogoutClick,
 }) {
   const [isOpen, setIsOpen] = useState(false);
   const pathname = usePathname();
