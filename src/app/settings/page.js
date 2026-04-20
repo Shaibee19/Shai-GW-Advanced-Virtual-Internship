@@ -6,7 +6,7 @@ import Sidebar from "@/app/components/Sidebar";
 import Image from "next/image";
 import settings from "../assets/login.png";
 
-const Page = ({ mode, setMode }) => {
+const Page = () => {
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
   const [authMode, setAuthMode] = useState("login");
   const [searchResults, setSearchResults] = useState([]);

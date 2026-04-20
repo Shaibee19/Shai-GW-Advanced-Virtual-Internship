@@ -7,7 +7,7 @@ import Image from "next/image";
 import plan from "../assets/pricing-top.png";
 import Footer from "../../app/components/Footer";
 
-export default function ChoosePlan({ mode, setMode }) {
+export default function ChoosePlan() {
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
   const [authMode, setAuthMode] = useState("login");
   const [activePlan, setActivePlan] = useState(mode);

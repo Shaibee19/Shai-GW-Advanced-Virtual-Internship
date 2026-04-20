@@ -4,6 +4,7 @@ import Searchbar from "@/app/components/Searchbar";
 import Sidebar from "@/app/components/Sidebar";
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
+import BookCard from "@/app/components/BookCard";
 
 export default function Library() {
   const [savedBooks, setSavedBooks] = useState([]);
@@ -24,15 +25,15 @@ export default function Library() {
         <div className="wrapper">
           <div className="page__layout">
             <Sidebar
-              mode={mode}
-              setMode={setMode}
-              onLoginClick={() => {
-                setAuthMode("login");
-                setIsAuthModalOpen(true);
-              }}
-              onLogoutClick={() => {
-                setMode("login"); // or however you represent logged-out state
-              }}
+              // mode={mode}
+              // setMode={setMode}
+              // onLoginClick={() => {
+              //   setAuthMode("login");
+              //   setIsAuthModalOpen(true);
+              // }}
+              // onLogoutClick={() => {
+              //   setMode("login"); // or however you represent logged-out state
+              // }}
             />
 
             <div className="page__content">
