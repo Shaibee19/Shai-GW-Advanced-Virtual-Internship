@@ -1,10 +1,16 @@
-import Searchbar from "../components/Searchbar";
+"use client";
+
+import { useState } from "react";
 import Sidebar from "../components/Sidebar";
+import Searchbar from "../components/Searchbar";
+import BookCard from "../components/BookCard";
 import Selected from "../components/Selected";
 import Recommended from "../components/Recommended";
 import Suggested from "../components/Suggested";
 
 const Page = () => {
+  const [searchResults, setSearchResults] = useState([]);
+
   return (
     <>
       <div id="__next">
@@ -13,7 +19,14 @@ const Page = () => {
             <Sidebar />
 
             <div className="page__content">
-              <Searchbar />
+              <Searchbar onResults={setSearchResults} />
+              {searchResults.length > 0 && (
+                <div className="search__results">
+                  {searchResults.map((book) => (
+                    <BookCard key={book.id} book={book} />
+                  ))}
+                </div>
+              )}
 
               <div className="row">
                 <div className="container">

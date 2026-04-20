@@ -1,9 +1,35 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
-export default function Searchbar() {
+export default function Searchbar({ onResults }) {
   const [search, setSearch] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    if (!search.trim()) {
+      onResults([]);
+      return;
+    }
+
+    const timer = setTimeout(async () => {
+      setLoading(true);
+      try {
+        const response = await fetch(
+          `https://us-central1-summaristt.cloudfunctions.net/getBooksByAuthorOrTitle?search=${search}`,
+        );
+        const data = await response.json();
+        console.log(data);
+        onResults(data);
+      } catch (error) {
+        console.error("Error fetching searched book:", error);
+      } finally {
+        setLoading(false);
+      }
+    }, 300);
+
+    return () => clearTimeout(timer);
+  }, [search]);
 
   return (
     <div className="search__background">
@@ -32,6 +58,7 @@ export default function Searchbar() {
                 </svg>
               </div>
             </div>
+
             <div className="sidebar__toggle--btn">
               <svg
                 stroke="currentColor"
