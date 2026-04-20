@@ -6,10 +6,11 @@ import Sidebar from "@/app/components/Sidebar";
 import Image from "next/image";
 import settings from "../assets/login.png";
 
-const Page = (mode, setMode) => {
+const Page = ({ mode, setMode }) => {
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
   const [authMode, setAuthMode] = useState("login");
   const [searchResults, setSearchResults] = useState([]);
+  const isLoggedIn = mode !== "login" && mode !== "signup";
 
   return (
     <>
@@ -17,9 +18,14 @@ const Page = (mode, setMode) => {
         <div className="wrapper">
           <div className="page__layout">
             <Sidebar
+              mode={mode}
+              setMode={setMode}
               onLoginClick={() => {
                 setAuthMode("login");
                 setIsAuthModalOpen(true);
+              }}
+              onLogoutClick={() => {
+                setMode("login"); // or however you represent logged-out state
               }}
             />
 
@@ -29,18 +35,19 @@ const Page = (mode, setMode) => {
               <div className="row">
                 <div className="container">
                   <div className="settings__wrapper">
-                    {mode === "login" ? (
+                    {isLoggedIn ? (
                       <>
                         <div className="section__title page__title">
                           Settings
                         </div>
+
                         <div className="setting__content">
-                          '
                           <div className="settings__sub--title">
                             Your Subscription plan
                           </div>
                           <div className="settings__text">premium-plus</div>
                         </div>
+
                         <div className="setting__content">
                           <div className="settings__sub--title">Email</div>
                           <div className="settings__text">hanna@gmail.com</div>
@@ -53,8 +60,13 @@ const Page = (mode, setMode) => {
                           <div className="settings__login--text">
                             Log in to your account to see your details.
                           </div>
+
                           <button
                             className="btn settings__login--btn"
+                            onClick={() => {
+                              setAuthMode("login");
+                              setIsAuthModalOpen(true);
+                            }}
                           >
                             Login
                           </button>

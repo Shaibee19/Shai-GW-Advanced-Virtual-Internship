@@ -9,6 +9,7 @@ export default function BookSummary() {
   const { id } = useParams();
   const [book, setBook] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [searchResults, setSearchResults] = useState([]);
 
   useEffect(() => {
     async function fetchBook() {
@@ -30,21 +31,34 @@ export default function BookSummary() {
 
   if (loading) return <div className="inner__book--skeleton">Loading…</div>;
   if (!book) return <div>Book not found</div>;
-  
+
   return (
     <>
       <div id="__next">
         <div className="wrapper">
           <div className="page__layout">
-            <Sidebar />
+            <Sidebar
+              mode={mode}
+              setMode={setMode}
+              onLoginClick={() => {
+                setAuthMode("login");
+                setIsAuthModalOpen(true);
+              }}
+              onLogoutClick={() => {
+                setMode("login"); // or however you represent logged-out state
+              }}
+            />
 
             <div className="page__content">
-              <Searchbar />
+              <Searchbar onResults={setSearchResults} />
 
               <div className="row">
                 <div className="container">
                   <div className="summary">
-                    <div className="audio__book--summary" style={{ fontSize: "16px" }}>
+                    <div
+                      className="audio__book--summary"
+                      style={{ fontSize: "16px" }}
+                    >
                       <div className="audio__book--summary-title">
                         <b>{book.title}</b>
                       </div>
@@ -73,8 +87,12 @@ export default function BookSummary() {
                           </figure>
                         </figure>
                         <div className="audio__track--details-wrapper">
-                          <div className="audio__track--title">{book.title}</div>
-                          <div className="audio__track--author">{book.author}</div>
+                          <div className="audio__track--title">
+                            {book.title}
+                          </div>
+                          <div className="audio__track--author">
+                            {book.author}
+                          </div>
                         </div>
                       </div>
                       <div className="audio__controls--wrapper">
@@ -144,13 +162,10 @@ export default function BookSummary() {
                         <div className="audio__time">03:24</div>
                       </div>
                     </div>
-
                   </div>
                 </div>
               </div>
-
             </div>
-
           </div>
         </div>
       </div>

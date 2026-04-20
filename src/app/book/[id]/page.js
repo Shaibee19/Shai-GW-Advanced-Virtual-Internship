@@ -9,6 +9,7 @@ export default function BookPage() {
   const { id } = useParams();
   const [book, setBook] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [searchResults, setSearchResults] = useState([]);
 
   useEffect(() => {
     async function fetchBook() {
@@ -36,10 +37,20 @@ export default function BookPage() {
       <div id="__next">
         <div className="wrapper">
           <div className="page__layout">
-            <Sidebar />
+            <Sidebar
+              mode={mode}
+              setMode={setMode}
+              onLoginClick={() => {
+                setAuthMode("login");
+                setIsAuthModalOpen(true);
+              }}
+              onLogoutClick={() => {
+                setMode("login"); // or however you represent logged-out state
+              }}
+            />
 
             <div className="page__content">
-              <Searchbar />
+              <Searchbar onResults={setSearchResults} />
 
               <div className="row">
                 <div className="container">
@@ -47,10 +58,14 @@ export default function BookPage() {
                     <div className="inner__book">
                       <div className="inner-book__title">{book.title}</div>
                       {book.subscriptionRequired && (
-                        <div className="inner-book__premium--pill">(Premium)</div>
+                        <div className="inner-book__premium--pill">
+                          (Premium)
+                        </div>
                       )}
                       <div className="inner-book__author">{book.author}</div>
-                      <div className="inner-book__sub--title">{book.subTitle}</div>
+                      <div className="inner-book__sub--title">
+                        {book.subTitle}
+                      </div>
 
                       <div className="inner-book__wrapper">
                         <div className="inner-book__description--wrapper">
@@ -140,7 +155,10 @@ export default function BookPage() {
 
                       {/* READ & LISTEN BUTTONS */}
                       <div className="inner-book__read--btn-wrapper">
-                        <a className="inner-book__read--btn" href={`/player/${book.id}`}>
+                        <a
+                          className="inner-book__read--btn"
+                          href={`/player/${book.id}`}
+                        >
                           <div className="inner-book__read--icon">
                             <svg
                               stroke="currentColor"
@@ -156,7 +174,10 @@ export default function BookPage() {
                           </div>
                           <div className="inner-book__read--text">Read</div>
                         </a>
-                        <a className="inner-book__read--btn" href={`/player/${book.id}`}>
+                        <a
+                          className="inner-book__read--btn"
+                          href={`/player/${book.id}`}
+                        >
                           <div className="inner-book__read--icon">
                             <svg
                               stroke="currentColor"
@@ -170,7 +191,7 @@ export default function BookPage() {
                               <path d="M842 454c0-4.4-3.6-8-8-8h-60c-4.4 0-8 3.6-8 8 0 140.3-113.7 254-254 254S258 594.3 258 454c0-4.4-3.6-8-8-8h-60c-4.4 0-8 3.6-8 8 0 168.7 126.6 307.9 290 327.6V884H326.7c-13.7 0-24.7 14.3-24.7 32v36c0 4.4 2.8 8 6.2 8h407.6c3.4 0 6.2-3.6 6.2-8v-36c0-17.7-11-32-24.7-32H548V782.1c165.3-18 294-158 294-328.1zM512 624c93.9 0 170-75.2 170-168V232c0-92.8-76.1-168-170-168s-170 75.2-170 168v224c0 92.8 76.1 168 170 168zm-94-392c0-50.6 41.9-92 94-92s94 41.4 94 92v224c0 50.6-41.9 92-94 92s-94-41.4-94-92V232z"></path>
                             </svg>
                           </div>
-                          <div className="inner-book__read--text" >Listen</div>
+                          <div className="inner-book__read--text">Listen</div>
                         </a>
                       </div>
 

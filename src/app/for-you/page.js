@@ -16,7 +16,17 @@ const Page = () => {
       <div id="__next">
         <div className="wrapper">
           <div className="page__layout">
-            <Sidebar />
+            <Sidebar
+              mode={mode}
+              setMode={setMode}
+              onLoginClick={() => {
+                setAuthMode("login");
+                setIsAuthModalOpen(true);
+              }}
+              onLogoutClick={() => {
+                setMode("login"); // or however you represent logged-out state
+              }}
+            />
 
             <div className="page__content">
               <Searchbar onResults={setSearchResults} />
@@ -37,9 +47,7 @@ const Page = () => {
                   </div>
                 </div>
               </div>
-
             </div>
-
           </div>
         </div>
       </div>
