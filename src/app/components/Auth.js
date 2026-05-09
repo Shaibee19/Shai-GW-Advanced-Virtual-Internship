@@ -29,6 +29,8 @@ export default function Auth({ onClose, mode, setMode }) {
       );
       setUser(userCredential.user);
       setError("");
+      onClose(); // Close the modal on successful sign up
+      router.push("/for-you");
     } catch (error) {
       setError(error.message);
     }
@@ -44,6 +46,7 @@ export default function Auth({ onClose, mode, setMode }) {
       );
       setUser(userCredential.user);
       setError("");
+      onClose(); // Close the modal on successful login
       router.push("/for-you");
     } catch (error) {
       setError(error.message);
@@ -82,7 +85,7 @@ export default function Auth({ onClose, mode, setMode }) {
             <>
               <button
                 className="btn guest__btn--wrapper"
-                onClick={() => router.push("/for-you")}
+                onClick={() => {onClose(); router.push("/for-you")}}
               >
                 <figure className="guest__icon--mask auth__icon--mask">
                   <IoPersonSharp />
@@ -101,6 +104,7 @@ export default function Auth({ onClose, mode, setMode }) {
                 onClick={async () => {
                   try {
                     await signInWithPopup(auth, googleProvider);
+                    onClose(); // Close the modal on successful login
                     router.push("/for-you");
                   } catch (error) {
                     setError(error.message);
@@ -151,7 +155,7 @@ export default function Auth({ onClose, mode, setMode }) {
             )}
             <button className="btn" type="submit">
               <span>
-                {mode === "login" && "Log in"}
+                {mode === "login" && "Login"}
                 {mode === "signup" && "Sign up"}
                 {mode === "forgot" && "Send reset password link"}
               </span>

@@ -10,23 +10,19 @@ const Page = () => {
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
   const [authMode, setAuthMode] = useState("login");
   const [searchResults, setSearchResults] = useState([]);
-  const isLoggedIn = mode !== "login" && mode !== "signup";
-
+  const isLoggedIn = "";
+  // mode !== "login" && mode !== "signup"
+  
   return (
     <>
       <div id="__next">
         <div className="wrapper">
           <div className="page__layout">
             <Sidebar
-              // mode={mode}
-              // setMode={setMode}
-              // onLoginClick={() => {
-              //   setAuthMode("login");
-              //   setIsAuthModalOpen(true);
-              // }}
-              // onLogoutClick={() => {
-              //   setMode("login"); // or however you represent logged-out state
-              // }}
+              onLoginClick={() => {
+                setAuthMode("login");
+                setIsAuthModalOpen(true);
+              }}
             />
 
             <div className="page__content">

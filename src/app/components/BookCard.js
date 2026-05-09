@@ -1,9 +1,6 @@
 export default function BookCard({ book }) {
   return (
     <div className="book">
-      {book.subscriptionRequired && (
-        <div className="book-pill">Premium</div>
-      )}
 
       <img src={book.imageLink} className="book__img" />
 

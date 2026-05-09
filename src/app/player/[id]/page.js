@@ -66,6 +66,7 @@ export default function BookSummary() {
                         {book.summary}
                       </div>
                     </div>
+
                     <div className="audio__wrapper">
                       <audio src={book.audioLink}></audio>
                       <div className="audio__track--wrapper">
@@ -159,9 +160,15 @@ export default function BookSummary() {
                           max="204.048"
                           style={{ background: "linear-gradient(to right, rgb(43, 217, 124) 0%, rgb(109, 120, 125) 0%)", "--range-progress": "0%" }}
                         /> */}
+                        <audio
+                        controls
+                        src={book.audioLink}
+                        className="book__audio"
+                      ></audio>
                         <div className="audio__time">03:24</div>
                       </div>
                     </div>
+                    
                   </div>
                 </div>
               </div>

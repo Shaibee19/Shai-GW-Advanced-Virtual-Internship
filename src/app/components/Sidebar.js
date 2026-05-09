@@ -1,22 +1,45 @@
 "use client";
 
-import { useState } from "react";
+import { useAuth } from "../context/AuthContext";
+import { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
 import Image from "next/image";
 import logo from "../assets/logo.png";
+import { signOut, onAuthStateChanged } from "firebase/auth";
+import { auth } from "../firebase";
 
-export default function Sidebar({
-  // mode,
-  // setMode,
-  // onLoginClick,
-  // onLogoutClick,
-}) {
+export default function Sidebar({ onLoginClick }) {
+  const { user } = useAuth();
   const [isOpen, setIsOpen] = useState(false);
   const pathname = usePathname();
   const activeLink = pathname.split("/")[1]; // "for-you", "library", "settings", "player"
+  const [isAuthOpen, setIsAuthOpen] = useState(false);
 
   const openSidebar = () => setIsOpen(true);
   const closeSidebar = () => setIsOpen(false);
+
+  const [currentUser, setCurrentUser] = useState(null);
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      setCurrentUser(user);
+    });
+    return () => unsubscribe();
+  }, []);
+
+  const handleLogout = async () => {
+    try {
+      await signOut(auth);
+      console.log("Logged out");
+      // window.location.href = "/"; // or router.push("/")
+    } catch (error) {
+      console.error("Logout error:", error);
+    }
+  };
+
+  const handleLoginClick = () => {
+    if (onLoginClick) onLoginClick();
+  };
 
   return (
     <>
@@ -231,7 +254,10 @@ export default function Sidebar({
               </div>
               <div className="sidebar__link--text">Help & Support</div>
             </div>
-            <div className="sidebar__link--wrapper">
+            <button
+              className="sidebar__link--wrapper"
+              onClick={user ? handleLogout : onLoginClick}
+            >
               <div className="sidebar__link--line"></div>
               <div className="sidebar__icon--wrapper">
                 <svg
@@ -243,26 +269,27 @@ export default function Sidebar({
                   strokeLinejoin="round"
                   height="1em"
                   width="1em"
-                  xmlns="http://www.w3.org/2000/svg"
                 >
-                  <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
-                  <polyline points="16 17 21 12 16 7"></polyline>
-                  <line x1="21" y1="12" x2="9" y2="12"></line>
+                  {user ? (
+                    <>
+                      <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+                      <polyline points="16 17 21 12 16 7"></polyline>
+                      <line x1="21" y1="12" x2="9" y2="12"></line>
+                    </>
+                  ) : (
+                    <>
+                      <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+                      <polyline points="16 17 21 12 16 7"></polyline>
+                      <line x1="21" y1="12" x2="9" y2="12"></line>
+                    </>
+                  )}
                 </svg>
               </div>
-              <div
-                className="sidebar__link--text"
-                onClick={() => {
-                  if (mode === "login") {
-                    onLoginClick();
-                  } else {
-                    onLogoutClick();
-                  }
-                }}
-              >
-                {mode === "login" ? "Login" : "Logout"}
+
+              <div className="sidebar__link--text">
+                {user ? "Logout" : "Login"}
               </div>
-            </div>
+            </button>
           </div>
         </div>
       </div>

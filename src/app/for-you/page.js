@@ -7,25 +7,32 @@ import BookCard from "../components/BookCard";
 import Selected from "../components/Selected";
 import Recommended from "../components/Recommended";
 import Suggested from "../components/Suggested";
+import Modal from "../components/Modal";
+import Auth from "../components/Auth";
 
 const Page = () => {
   const [searchResults, setSearchResults] = useState([]);
+  const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
+  const [authMode, setAuthMode] = useState("login");
 
   return (
     <>
+      <Modal isOpen={isAuthModalOpen} onClose={() => setIsAuthModalOpen(false)}>
+        <Auth
+          onClose={() => setIsAuthModalOpen(false)}
+          mode={authMode}
+          setMode={setAuthMode}
+        />
+      </Modal>
+      
       <div id="__next">
         <div className="wrapper">
           <div className="page__layout">
             <Sidebar
-              // mode={mode}
-              // setMode={setMode}
-              // onLoginClick={() => {
-              //   setAuthMode("login");
-              //   setIsAuthModalOpen(true);
-              // }}
-              // onLogoutClick={() => {
-              //   setMode("login"); // or however you represent logged-out state
-              // }}
+              onLoginClick={() => {
+                setAuthMode("login");
+                setIsAuthModalOpen(true);
+              }}
             />
 
             <div className="page__content">

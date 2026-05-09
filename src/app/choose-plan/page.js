@@ -10,12 +10,27 @@ import Footer from "../../app/components/Footer";
 export default function ChoosePlan() {
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
   const [authMode, setAuthMode] = useState("login");
-  const [activePlan, setActivePlan] = useState(mode);
+  const [activePlan, setActivePlan] = useState();
   const [openIndex, setOpenIndex] = useState(null);
+  const app = initFirebase();
 
   const toggleAccordion = (index) => {
     setOpenIndex(openIndex === index ? null : index);
   };
+
+    const upgradeToYearly = async () => {
+      const priceId = "price_1TQvzjJwNOA2GTwYPxrnAAxK";
+      const checkoutUrl = await getCheckoutUrl(app, priceId);
+      router.push(checkoutUrl);
+      console.log("Upgrade to Premium Yearly");
+    };
+
+     const upgradeToMonthly = async () => {
+      const priceId = "price_1TQvyRJwNOA2GTwY3hUBXzBh";
+      const checkoutUrl = await getCheckoutUrl(app, priceId);
+      router.push(checkoutUrl);
+      console.log("Upgrade to Premium Monthly");
+    };
 
   const faqItems = [
     {
@@ -128,7 +143,7 @@ export default function ChoosePlan() {
             <div className="section__title">Choose the plan that fits you</div>
             <div
               className={`plan__card ${activePlan === "yearly" ? "plan__card--active" : ""}`}
-              onClick={() => setActivePlan("yearly")}
+              onClick={upgradeToYearly}
             >
               <div className="plan__card--circle">
                 {activePlan === "yearly" && (
@@ -150,7 +165,7 @@ export default function ChoosePlan() {
 
             <div
               className={`plan__card ${activePlan === "monthly" ? "plan__card--active" : ""}`}
-              onClick={() => setActivePlan("monthly")}
+              onClick={upgradeToMonthly}
             >
               <div className="plan__card--circle">
                 {activePlan === "monthly" && (

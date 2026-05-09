@@ -258,11 +258,6 @@ export default function BookPage() {
                           style={{ display: "block" }}
                         />
                       </figure>
-                      <audio
-                        controls
-                        src={book.audioLink}
-                        className="book__audio"
-                      ></audio>
                     </div>
                   </div>
 

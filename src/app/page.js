@@ -16,6 +16,43 @@ import RotatingHeadings from "../app/components/RotatingHeadings";
 export default function Home() {
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
   const [authMode, setAuthMode] = useState("login");
+  const features = [
+    { icon: <AiFillFileText />,
+      title: "Read or listen",
+      subTitle: "Save time by getting the core ideas from the best books." },
+    { icon: <AiFillBulb />,
+      title: "Find your next read",
+      subTitle: "Explore book lists and personalized recommendations." },
+    { icon: <AiFillAudio />,
+      title: "Briefcasts",
+      subTitle: "Gain valuable insights from briefcasts." },
+  ];
+  const statistics = [
+    { number: "93%",
+      title: `of Summarist members <b>significantly increase</b> reading frequency.` },
+    { number: "96%",
+      title: `of Summarist members <b>establish better</b> habits.` },
+    { number: "90%",
+      title: `have made <b>significant positive</b> change to their lives.` },
+  ];
+  const statistics2 = [
+    { number: "91%",
+      title: `of Summarist members <b>report feeling more productive</b>{" "} after incorporating the service into their daily routine.` },
+    { number: "94%",
+      title: `of Summarist members have <b>noticed an improvement</b> in their overall comprehension and retention of information.` },
+    { number: "88%",
+      title: `of Summarist members <b>feel more informed</b> about current events and industry trends since using the platform.` },
+  ];
+  const reviews = [
+    { name: "Hanna M.",
+      body: `This app has been a <b>game-changer</b> for me! It's saved me so much time and effort in reading and comprehending books. Highly recommend it to all book lovers.` },
+    { name: "David B.",
+      body: `I love this app! It provides <b>concise and accurate summaries</b> of books in a way that is easy to understand. It's also very user-friendly and intuitive.` },
+    { name: "Nathan S.",
+      body: `This app is a great way to get the main takeaways from a book without having to read the entire thing. <b>The summaries are well-written and informative.</b> Definitely worth downloading.` },
+    { name: "Ryan R.",
+      body: `If you're a busy person who <b>loves reading but doesn't have the time</b> to read every book in full, this app is for you! The summaries are thorough and provide a great overview of the book's content.` },
+  ];
 
   return (
     <>
@@ -26,12 +63,14 @@ export default function Home() {
           setMode={setAuthMode}
         />
       </Modal>
+
       <Navbar
         onLoginClick={() => {
           setAuthMode("login");
           setIsAuthModalOpen(true);
         }}
       />
+
       <section id="landing">
         <div className="container">
           <div className="row">
@@ -62,6 +101,7 @@ export default function Home() {
           </div>
         </div>
       </section>
+
       <section id="features">
         <div className="container">
           <div className="row">
@@ -69,33 +109,13 @@ export default function Home() {
               Understand books in few minutes
             </div>
             <div className="features__wrapper">
-              <div className="features">
-                <div className="features__icon">
-                  <AiFillFileText />
+              {features.map((feat, index) => (
+                <div className="features">
+                  <div className="features__icon">{feat.icon}</div>
+                  <div className="features__title">{feat.title}</div>
+                  <div className="features__sub--title">{feat.subTitle}</div>
                 </div>
-                <div className="features__title">Read or listen</div>
-                <div className="features__sub--title">
-                  Save time by getting the core ideas from the best books.
-                </div>
-              </div>
-              <div className="features">
-                <div className="features__icon">
-                  <AiFillBulb />
-                </div>
-                <div className="features__title">Find your next read</div>
-                <div className="features__sub--title">
-                  Explore book lists and personalized recommendations.
-                </div>
-              </div>
-              <div className="features">
-                <div className="features__icon">
-                  <AiFillAudio />
-                </div>
-                <div className="features__title">Briefcasts</div>
-                <div className="features__sub--title">
-                  Gain valuable insights from briefcasts
-                </div>
-              </div>
+              ))}
             </div>
             <div className="statistics__wrapper">
               <RotatingHeadings
@@ -109,50 +129,26 @@ export default function Home() {
                 ]}
               />
               <div className="statistics__content--details">
-                <div className="statistics__data">
-                  <div className="statistics__data--number">93%</div>
-                  <div className="statistics__data--title">
-                    of Summarist members <b>significantly increase</b> reading
-                    frequency.
+                {statistics.map((stat, index) => (
+                  <div className="statistics__data">
+                    <div className="statistics__data--number">
+                      {stat.number}
+                    </div>
+                    <div className="statistics__data--title">{stat.title}</div>
                   </div>
-                </div>
-                <div className="statistics__data">
-                  <div className="statistics__data--number">96%</div>
-                  <div className="statistics__data--title">
-                    of Summarist members <b>establish better</b> habits.
-                  </div>
-                </div>
-                <div className="statistics__data">
-                  <div className="statistics__data--number">90%</div>
-                  <div className="statistics__data--title">
-                    have made <b>significant positive</b> change to their lives.
-                  </div>
-                </div>
+                ))}
               </div>
             </div>
             <div className="statistics__wrapper">
               <div className="statistics__content--details statistics__content--details-second">
-                <div className="statistics__data">
-                  <div className="statistics__data--number">91%</div>
-                  <div className="statistics__data--title">
-                    of Summarist members <b>report feeling more productive</b>{" "}
-                    after incorporating the service into their daily routine.
+                {statistics2.map((stat, index) => (
+                  <div className="statistics__data">
+                    <div className="statistics__data--number">
+                      {stat.number}
+                    </div>
+                    <div className="statistics__data--title">{stat.title}</div>
                   </div>
-                </div>
-                <div className="statistics__data">
-                  <div className="statistics__data--number">94%</div>
-                  <div className="statistics__data--title">
-                    of Summarist members have <b>noticed an improvement</b> in
-                    their overall comprehension and retention of information.
-                  </div>
-                </div>
-                <div className="statistics__data">
-                  <div className="statistics__data--number">88%</div>
-                  <div className="statistics__data--title">
-                    of Summarist members <b>feel more informed</b> about current
-                    events and industry trends since using the platform.
-                  </div>
-                </div>
+                ))}
               </div>
               <RotatingHeadings
                 items={[
@@ -168,89 +164,43 @@ export default function Home() {
           </div>
         </div>
       </section>
+
       <section id="reviews">
         <div className="row">
           <div className="container">
             <div className="section__title">What our members say</div>
             <div className="reviews__wrapper">
-              <div className="review">
-                <div className="review__header">
-                  <div className="review__name">Hanna M.</div>
-                  <div className="review__stars">
-                    <BsStarFill />
-                    <BsStarFill />
-                    <BsStarFill />
-                    <BsStarFill />
-                    <BsStarFill />
+              {reviews.map((review, index) => (
+                <div className="review">
+                  <div className="review__header">
+                    <div className="review__name">{review.name}</div>
+                    <div className="review__stars">
+                      <BsStarFill />
+                      <BsStarFill />
+                      <BsStarFill />
+                      <BsStarFill />
+                      <BsStarFill />
+                    </div>
                   </div>
+                  <div className="review__body">{review.body}</div>
                 </div>
-                <div className="review__body">
-                  This app has been a <b>game-changer</b> for me! It's saved me
-                  so much time and effort in reading and comprehending books.
-                  Highly recommend it to all book lovers.
-                </div>
-              </div>
-              <div className="review">
-                <div className="review__header">
-                  <div className="review__name">David B.</div>
-                  <div className="review__stars">
-                    <BsStarFill />
-                    <BsStarFill />
-                    <BsStarFill />
-                    <BsStarFill />
-                    <BsStarFill />
-                  </div>
-                </div>
-                <div className="review__body">
-                  I love this app! It provides
-                  <b>concise and accurate summaries</b> of books in a way that
-                  is easy to understand. It's also very user-friendly and
-                  intuitive.
-                </div>
-              </div>
-              <div className="review">
-                <div className="review__header">
-                  <div className="review__name">Nathan S.</div>
-                  <div className="review__stars">
-                    <BsStarFill />
-                    <BsStarFill />
-                    <BsStarFill />
-                    <BsStarFill />
-                    <BsStarFill />
-                  </div>
-                </div>
-                <div className="review__body">
-                  This app is a great way to get the main takeaways from a book
-                  without having to read the entire thing.
-                  <b>The summaries are well-written and informative.</b>
-                  Definitely worth downloading.
-                </div>
-              </div>
-              <div className="review">
-                <div className="review__header">
-                  <div className="review__name">Ryan R.</div>
-                  <div className="review__stars">
-                    <BsStarFill />
-                    <BsStarFill />
-                    <BsStarFill />
-                    <BsStarFill />
-                    <BsStarFill />
-                  </div>
-                </div>
-                <div className="review__body">
-                  If you're a busy person who
-                  <b>loves reading but doesn't have the time</b> to read every
-                  book in full, this app is for you! The summaries are thorough
-                  and provide a great overview of the book's content.
-                </div>
-              </div>
+              ))}
             </div>
             <div className="reviews__btn--wrapper">
-              <button className="btn home__cta--btn">Login</button>
+              <button
+                className="btn home__cta--btn"
+                onLoginClick={() => {
+                  setAuthMode("login");
+                  setIsAuthModalOpen(true);
+                }}
+              >
+                Login
+              </button>
             </div>
           </div>
         </div>
       </section>
+
       <section id="numbers">
         <div className="container">
           <div className="row">
@@ -293,6 +243,7 @@ export default function Home() {
           </div>
         </div>
       </section>
+      
       <Footer />
     </>
   );
