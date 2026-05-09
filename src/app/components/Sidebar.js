@@ -1,31 +1,31 @@
 "use client";
 
 import { useAuth } from "../context/AuthContext";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { usePathname } from "next/navigation";
 import Image from "next/image";
 import logo from "../assets/logo.png";
-import { signOut, onAuthStateChanged } from "firebase/auth";
+import { signOut } from "firebase/auth";
 import { auth } from "../firebase";
 
 export default function Sidebar({ onLoginClick }) {
-  const { user } = useAuth();
+  const { user } = useAuth(); // GLOBAL AUTH STATE
   const [isOpen, setIsOpen] = useState(false);
   const pathname = usePathname();
   const activeLink = pathname.split("/")[1]; // "for-you", "library", "settings", "player"
-  const [isAuthOpen, setIsAuthOpen] = useState(false);
+  // const [isAuthOpen, setIsAuthOpen] = useState(false);
 
   const openSidebar = () => setIsOpen(true);
   const closeSidebar = () => setIsOpen(false);
 
-  const [currentUser, setCurrentUser] = useState(null);
+  // const [currentUser, setCurrentUser] = useState(null);
 
-  useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
-      setCurrentUser(user);
-    });
-    return () => unsubscribe();
-  }, []);
+  // useEffect(() => {
+  //   const unsubscribe = onAuthStateChanged(auth, (user) => {
+  //     setCurrentUser(user);
+  //   });
+  //   return () => unsubscribe();
+  // }, []);
 
   const handleLogout = async () => {
     try {
@@ -35,10 +35,6 @@ export default function Sidebar({ onLoginClick }) {
     } catch (error) {
       console.error("Logout error:", error);
     }
-  };
-
-  const handleLoginClick = () => {
-    if (onLoginClick) onLoginClick();
   };
 
   return (
@@ -56,6 +52,7 @@ export default function Sidebar({ onLoginClick }) {
         <div className="sidebar__logo">
           <Image src={logo} alt="logo" />
         </div>
+
         <div className="sidebar__wrapper">
           <div className="sidebar__top">
             <a className="sidebar__link--wrapper" href="/for-you">
@@ -77,6 +74,7 @@ export default function Sidebar({ onLoginClick }) {
               </div>
               <div className="sidebar__link--text">For you</div>
             </a>
+
             <a className="sidebar__link--wrapper" href="/library">
               <div
                 className={`sidebar__link--line ${activeLink === "library" ? "active--tab" : ""}`}
@@ -96,6 +94,7 @@ export default function Sidebar({ onLoginClick }) {
               </div>
               <div className="sidebar__link--text">My Library</div>
             </a>
+
             <div className="sidebar__link--wrapper sidebar__link--not-allowed">
               <div className="sidebar__link--line "></div>
               <div className="sidebar__icon--wrapper">
@@ -233,6 +232,7 @@ export default function Sidebar({ onLoginClick }) {
               </div>
               <div className="sidebar__link--text">Settings</div>
             </a>
+
             <div className="sidebar__link--wrapper sidebar__link--not-allowed">
               <div className="sidebar__link--line "></div>
               <div className="sidebar__icon--wrapper">
@@ -254,6 +254,8 @@ export default function Sidebar({ onLoginClick }) {
               </div>
               <div className="sidebar__link--text">Help & Support</div>
             </div>
+
+            {/* LOGIN / LOGOUT TOGGLE */}
             <button
               className="sidebar__link--wrapper"
               onClick={user ? handleLogout : onLoginClick}

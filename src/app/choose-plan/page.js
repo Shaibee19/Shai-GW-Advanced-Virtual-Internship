@@ -1,11 +1,17 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useAuth } from "../context/AuthContext";
 import Modal from "../components/Modal";
 import Auth from "../components/Auth";
 import Image from "next/image";
 import plan from "../assets/pricing-top.png";
 import Footer from "../../app/components/Footer";
+import { initFirebase } from "../firebase";
+import { useRouter } from "next/navigation";
+import { getAuth } from "firebase/auth";
+import { getCheckoutUrl } from "../account/stripePayments";
+import { getPremiumStatus } from "../account/getPremiumStatus";
 
 export default function ChoosePlan() {
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
@@ -13,24 +19,46 @@ export default function ChoosePlan() {
   const [activePlan, setActivePlan] = useState();
   const [openIndex, setOpenIndex] = useState(null);
   const app = initFirebase();
+  const auth = getAuth(app);
+  const { user } = useAuth();
+
+  const userName = auth.currentUser?.displayName;
+  const email = auth.currentUser?.email;
+  const router = useRouter();
+  const [isPremium, setIsPremium] = useState(false);
+
+  useEffect(() => {
+    const checkPremium = async () => {
+      const newPremiumStatus = auth.currentUser
+        ? await getPremiumStatus(app)
+        : false;
+      setIsPremium(newPremiumStatus);
+    };
+    checkPremium();
+  }, [app, auth.currentUser?.uid]);
+
+  const signOut = () => {
+    auth.signOut();
+    router.push("/");
+  };
 
   const toggleAccordion = (index) => {
     setOpenIndex(openIndex === index ? null : index);
   };
 
-    const upgradeToYearly = async () => {
-      const priceId = "price_1TQvzjJwNOA2GTwYPxrnAAxK";
-      const checkoutUrl = await getCheckoutUrl(app, priceId);
-      router.push(checkoutUrl);
-      console.log("Upgrade to Premium Yearly");
-    };
+  const upgradeToYearly = async () => {
+    const priceId = "price_1TQvzjJwNOA2GTwYPxrnAAxK";
+    const checkoutUrl = await getCheckoutUrl(app, priceId);
+    router.push(checkoutUrl);
+    console.log("Upgrade to Premium Yearly");
+  };
 
-     const upgradeToMonthly = async () => {
-      const priceId = "price_1TQvyRJwNOA2GTwY3hUBXzBh";
-      const checkoutUrl = await getCheckoutUrl(app, priceId);
-      router.push(checkoutUrl);
-      console.log("Upgrade to Premium Monthly");
-    };
+  const upgradeToMonthly = async () => {
+    const priceId = "price_1TQvyRJwNOA2GTwY3hUBXzBh";
+    const checkoutUrl = await getCheckoutUrl(app, priceId);
+    router.push(checkoutUrl);
+    console.log("Upgrade to Premium Monthly");
+  };
 
   const faqItems = [
     {
