@@ -189,7 +189,7 @@ export default function Home() {
             <div className="reviews__btn--wrapper">
               <button
                 className="btn home__cta--btn"
-                onLoginClick={() => {
+                onClick={() => {
                   setAuthMode("login");
                   setIsAuthModalOpen(true);
                 }}

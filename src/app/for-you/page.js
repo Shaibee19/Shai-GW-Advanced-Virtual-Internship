@@ -40,7 +40,7 @@ const Page = () => {
               {searchResults.length > 0 && (
                 <div className="search__results">
                   {searchResults.map((book) => (
-                    <BookCard key={book.id} book={book} />
+                    <BookCard key={book.id || index} book={book} />
                   ))}
                 </div>
               )}

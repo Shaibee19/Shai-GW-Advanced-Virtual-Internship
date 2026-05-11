@@ -1,7 +1,7 @@
 "use client";
 
 import { useAuth } from "../context/AuthContext";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
 import Image from "next/image";
 import logo from "../assets/logo.png";
@@ -55,6 +55,7 @@ export default function Sidebar({ onLoginClick }) {
 
         <div className="sidebar__wrapper">
           <div className="sidebar__top">
+            {/* FOR YOU */}
             <a className="sidebar__link--wrapper" href="/for-you">
               <div
                 className={`sidebar__link--line ${activeLink === "for-you" ? "active--tab" : ""}`}
@@ -75,6 +76,7 @@ export default function Sidebar({ onLoginClick }) {
               <div className="sidebar__link--text">For you</div>
             </a>
 
+            {/* MY LIBRARY */}
             <a className="sidebar__link--wrapper" href="/library">
               <div
                 className={`sidebar__link--line ${activeLink === "library" ? "active--tab" : ""}`}
@@ -95,6 +97,7 @@ export default function Sidebar({ onLoginClick }) {
               <div className="sidebar__link--text">My Library</div>
             </a>
 
+            {/* HIGHLIGHTS (Disabled) */}
             <div className="sidebar__link--wrapper sidebar__link--not-allowed">
               <div className="sidebar__link--line "></div>
               <div className="sidebar__icon--wrapper">
@@ -115,6 +118,8 @@ export default function Sidebar({ onLoginClick }) {
               </div>
               <div className="sidebar__link--text">Highlights</div>
             </div>
+
+            {/* SEARCH (Disabled) */}
             <div className="sidebar__link--wrapper sidebar__link--not-allowed">
               <div className="sidebar__link--line "></div>
               <div className="sidebar__icon--wrapper">
@@ -133,6 +138,7 @@ export default function Sidebar({ onLoginClick }) {
               <div className="sidebar__link--text">Search</div>
             </div>
 
+            {/* FONT SIZE (Only on Player) */}
             {pathname.startsWith("/player") && (
               <div className="sidebar__link--wrapper sidebar__font--size-wrapper">
                 <div className="sidebar__link--text sidebar__font--size-icon sidebar__font--size-icon--active">
@@ -208,6 +214,7 @@ export default function Sidebar({ onLoginClick }) {
           </div>
 
           <div className="sidebar__bottom">
+            {/* SETTINGS */}
             <a className="sidebar__link--wrapper" href="/settings">
               <div
                 className={`sidebar__link--line ${activeLink === "settings" ? "active--tab" : ""}`}
@@ -233,6 +240,7 @@ export default function Sidebar({ onLoginClick }) {
               <div className="sidebar__link--text">Settings</div>
             </a>
 
+            {/* HELP & SUPPORT (Disabled) */}
             <div className="sidebar__link--wrapper sidebar__link--not-allowed">
               <div className="sidebar__link--line "></div>
               <div className="sidebar__icon--wrapper">
@@ -288,7 +296,10 @@ export default function Sidebar({ onLoginClick }) {
                 </svg>
               </div>
 
-              <div className="sidebar__link--text">
+              <div
+                className="sidebar__link--text"
+                onClick={user ? () => signOut(auth) : onLoginClick}
+              >
                 {user ? "Logout" : "Login"}
               </div>
             </button>

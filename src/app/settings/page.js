@@ -1,20 +1,32 @@
 "use client";
 
 import { useState } from "react";
+import { useAuth } from "../context/AuthContext";
 import Searchbar from "@/app/components/Searchbar";
 import Sidebar from "@/app/components/Sidebar";
+import Modal from "@/app/components/Modal";
+import Auth from "@/app/components/Auth";
 import Image from "next/image";
 import settings from "../assets/login.png";
 
 const Page = () => {
+  const { user } = useAuth();
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
   const [authMode, setAuthMode] = useState("login");
   const [searchResults, setSearchResults] = useState([]);
   const isLoggedIn = "";
   // mode !== "login" && mode !== "signup"
-  
+
   return (
     <>
+      <Modal isOpen={isAuthModalOpen} onClose={() => setIsAuthModalOpen(false)}>
+        <Auth
+          onClose={() => setIsAuthModalOpen(false)}
+          mode={authMode}
+          setMode={setAuthMode}
+        />
+      </Modal>
+
       <div id="__next">
         <div className="wrapper">
           <div className="page__layout">
@@ -31,7 +43,7 @@ const Page = () => {
               <div className="row">
                 <div className="container">
                   <div className="settings__wrapper">
-                    {isLoggedIn ? (
+                    {user ? (
                       <>
                         <div className="section__title page__title">
                           Settings
@@ -46,7 +58,7 @@ const Page = () => {
 
                         <div className="setting__content">
                           <div className="settings__sub--title">Email</div>
-                          <div className="settings__text">hanna@gmail.com</div>
+                          <div className="settings__text">{user.email}</div>
                         </div>
                       </>
                     ) : (

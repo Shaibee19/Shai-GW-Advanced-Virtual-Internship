@@ -1066,6 +1066,11 @@ button:disabled {
   width: calc(100% / 3);
 }
 
+audio {
+    width: 300px;
+    height: 54px;
+}
+
 .audio__track--wrapper {
   display: flex;
   gap: 12px;
