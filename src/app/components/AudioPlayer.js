@@ -79,6 +79,26 @@ export default function AudioPlayer({ book }) {
 
   const progressPercent = duration ? (currentTime / duration) * 100 : 0;
 
+  // Mark book as finished when audio ends
+  useEffect(() => {
+    if (!audioRef.current) return; // prevents the crash
+
+    audioRef.current.onended = async () => {
+      console.log("Audio finished!");
+      const ref = doc(db, "users", user.uid);
+      await updateDoc(ref, {
+        finished: arrayUnion({
+          id: book.id,
+          title: book.title,
+          author: book.author,
+          imageLink: book.imageLink,
+          duration: book.duration,
+          rating: book.averageRating,
+        }),
+      });
+    };
+  }, [audioRef.current]);
+
   return (
     <div className="audio__wrapper">
       {/* Audio Element */}
@@ -203,7 +223,7 @@ export default function AudioPlayer({ book }) {
       </div>
 
       {/* Volume */}
-      <div className="audio__volume--wrapper">
+      {/* <div className="audio__volume--wrapper">
         <input
           type="range"
           min="0"
@@ -212,7 +232,7 @@ export default function AudioPlayer({ book }) {
           value={volume}
           onChange={handleVolumeChange}
         />
-      </div>
+      </div> */}
     </div>
   );
 }

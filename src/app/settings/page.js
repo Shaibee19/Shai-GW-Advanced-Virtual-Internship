@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useAuth } from "../context/AuthContext";
 import Searchbar from "@/app/components/Searchbar";
 import Sidebar from "@/app/components/Sidebar";
@@ -8,6 +8,8 @@ import Modal from "@/app/components/Modal";
 import Auth from "@/app/components/Auth";
 import Image from "next/image";
 import settings from "../assets/login.png";
+import { db } from "@/app/firebase";
+import { doc, getDoc } from "firebase/firestore";
 
 const Page = () => {
   const { user } = useAuth();
@@ -16,6 +18,48 @@ const Page = () => {
   const [searchResults, setSearchResults] = useState([]);
   const isLoggedIn = "";
   // mode !== "login" && mode !== "signup"
+  const [subscription, setSubscription] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    if (!user) {
+      setLoading(false);
+      return;
+    }
+
+    const fetchUserData = async () => {
+      const ref = doc(db, "users", user.uid);
+
+      try {
+        const snap = await getDoc(ref);
+
+        if (snap.exists()) {
+          setSubscription(snap.data().subscription?.plan || "free");
+        }
+      } catch (err) {
+        console.error(err);
+      } finally {
+        setLoading(false);
+      }
+
+    };
+
+    fetchUserData();
+  }, [user]);
+
+  {
+    /* SKELETON LOADING */
+  }
+  if (loading) {
+    return (
+      <>
+        <div className="skeleton" style={{ width: "160px", height: "24px", marginBottom: "12px", }}></div>
+        <div className="skeleton" style={{ width: "280px", height: "24px", marginBottom: "32px", }}></div>
+        <div className="skeleton" style={{ width: "160px", height: "24px", marginBottom: "12px", }}></div>
+        <div className="skeleton" style={{ width: "280px", height: "24px" }}></div>;
+      </>
+    );
+  }
 
   return (
     <>
@@ -43,6 +87,7 @@ const Page = () => {
               <div className="row">
                 <div className="container">
                   <div className="settings__wrapper">
+
                     {user ? (
                       <>
                         <div className="section__title page__title">
@@ -53,7 +98,7 @@ const Page = () => {
                           <div className="settings__sub--title">
                             Your Subscription plan
                           </div>
-                          <div className="settings__text">premium-plus</div>
+                          <div className="settings__text">{subscription}</div>
                         </div>
 
                         <div className="setting__content">
@@ -81,36 +126,6 @@ const Page = () => {
                         </div>
                       </>
                     )}
-
-                    {/* SKELETON LOADING */}
-                    <div
-                      className="skeleton"
-                      style={{
-                        width: "160px",
-                        height: "24px",
-                        marginBottom: "12px",
-                      }}
-                    ></div>
-                    <div
-                      className="skeleton"
-                      style={{
-                        width: "280px",
-                        height: "24px",
-                        marginBottom: "32px",
-                      }}
-                    ></div>
-                    <div
-                      className="skeleton"
-                      style={{
-                        width: "160px",
-                        height: "24px",
-                        marginBottom: "12px",
-                      }}
-                    ></div>
-                    <div
-                      className="skeleton"
-                      style={{ width: "280px", height: "24px" }}
-                    ></div>
                   </div>
                 </div>
               </div>

@@ -2,22 +2,66 @@
 
 import Searchbar from "@/app/components/Searchbar";
 import Sidebar from "@/app/components/Sidebar";
-import { useEffect, useState } from "react";
-import { useParams } from "next/navigation";
 import BookCard from "@/app/components/BookCard";
+import { useAuth } from "@/app/context/AuthContext";
+import { db } from "@/app/firebase";
+import { doc, getDoc } from "firebase/firestore";
+import { useParams } from "next/navigation";
+import { useEffect, useState } from "react";
 
 export default function Library() {
+  const { user } = useAuth();
   const [savedBooks, setSavedBooks] = useState([]);
   const [finishedBooks, setFinishedBooks] = useState([]);
   const [searchResults, setSearchResults] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const saved = JSON.parse(localStorage.getItem("savedBooks")) || [];
-    const finished = JSON.parse(localStorage.getItem("finishedBooks")) || [];
+    // const saved = JSON.parse(localStorage.getItem("savedBooks")) || [];
+    // const finished = JSON.parse(localStorage.getItem("finishedBooks")) || [];
 
-    setSavedBooks(saved);
-    setFinishedBooks(finished);
-  }, []);
+    // setSavedBooks(saved);
+    // setFinishedBooks(finished);
+    if (!user) return;
+
+    const fetchLibrary = async () => {
+      const ref = doc(db, "users", user.uid);
+      const snap = await getDoc(ref);
+
+      if (snap.exists()) {
+        setSavedBooks(snap.data().library || []);
+        setFinishedBooks(snap.data().finished || []);
+      }
+    };
+
+    setLoading(false);
+    fetchLibrary();
+  }, [user]);
+
+  if (!user) {
+    return (
+      <div className="page__content">
+        <p>Please log in to view your library.</p>
+      </div>
+    );
+  }
+
+  
+    
+  /* SKELETON LOADING */
+  if (loading)
+    return (
+      <div className="recommended__books--skeleton-wrapper">
+        <div className="recommended__books--skeleton">
+          <div className="skeleton" style={{ width: "100px", height: "20px", marginBottom: "24px" }}></div>
+          <div className="skeleton" style={{ width: "100%", height: "240px", marginBottom: "8px", }}></div>
+          <div className="skeleton" style={{ width: "100%", height: "20px", marginBottom: "8px", }}></div>
+          <div className="skeleton" style={{ width: "90%", height: "16px", marginBottom: "8px", }}></div>
+          <div className="skeleton" style={{ width: "80%", height: "32px", marginBottom: "8px", }}></div>
+          <div className="skeleton" style={{ width: "90%", height: "16px", marginBottom: "8px", }}></div>
+        </div>
+      </div>
+    );
 
   return (
     <>
@@ -25,15 +69,15 @@ export default function Library() {
         <div className="wrapper">
           <div className="page__layout">
             <Sidebar
-              // mode={mode}
-              // setMode={setMode}
-              // onLoginClick={() => {
-              //   setAuthMode("login");
-              //   setIsAuthModalOpen(true);
-              // }}
-              // onLogoutClick={() => {
-              //   setMode("login"); // or however you represent logged-out state
-              // }}
+            // mode={mode}
+            // setMode={setMode}
+            // onLoginClick={() => {
+            //   setAuthMode("login");
+            //   setIsAuthModalOpen(true);
+            // }}
+            // onLogoutClick={() => {
+            //   setMode("login"); // or however you represent logged-out state
+            // }}
             />
 
             <div className="page__content">
@@ -42,8 +86,13 @@ export default function Library() {
               <div className="row">
                 <div className="container">
                   <div className="for-you__wrapper">
+
+                    {/* SAVED BOOKS */}
                     <div className="for-you__title">Saved Books</div>
-                    <div className="for-you__sub--title">2 items</div>
+                    <div className="for-you__sub--title">
+                      {savedBooks.length} items
+                    </div>
+
                     {savedBooks.length === 0 ? (
                       <p>You haven’t saved any books yet.</p>
                     ) : (
@@ -53,8 +102,12 @@ export default function Library() {
                         ))}
                       </div>
                     )}
+
+                    {/* FINISHED BOOKS */}
                     <div className="for-you__title">Finished</div>
-                    <div className="for-you__sub--title">13 items</div>
+                    <div className="for-you__sub--title">
+                      {finishedBooks.length} items
+                    </div>
                     {finishedBooks.length === 0 ? (
                       <p>You haven’t finished any books yet.</p>
                     ) : (
@@ -64,63 +117,10 @@ export default function Library() {
                         ))}
                       </div>
                     )}
-
-                    {/* SKELETON LOADING */}
-                    <div
-                      className="skeleton"
-                      style={{
-                        width: "100px",
-                        height: "20px",
-                        marginBottom: "24px",
-                      }}
-                    ></div>
-                    <div className="recommended__books--skeleton-wrapper">
-                      <div className="recommended__books--skeleton">
-                        <div
-                          className="skeleton"
-                          style={{
-                            width: "100%",
-                            height: "240px",
-                            marginBottom: "8px",
-                          }}
-                        ></div>
-                        <div
-                          className="skeleton"
-                          style={{
-                            width: "100%",
-                            height: "20px",
-                            marginBottom: "8px",
-                          }}
-                        ></div>
-                        <div
-                          className="skeleton"
-                          style={{
-                            width: "90%",
-                            height: "16px",
-                            marginBottom: "8px",
-                          }}
-                        ></div>
-                        <div
-                          className="skeleton"
-                          style={{
-                            width: "80%",
-                            height: "32px",
-                            marginBottom: "8px",
-                          }}
-                        ></div>
-                        <div
-                          className="skeleton"
-                          style={{
-                            width: "90%",
-                            height: "16px",
-                            marginBottom: "8px",
-                          }}
-                        ></div>
-                      </div>
-                    </div>
                   </div>
                 </div>
               </div>
+
             </div>
           </div>
         </div>

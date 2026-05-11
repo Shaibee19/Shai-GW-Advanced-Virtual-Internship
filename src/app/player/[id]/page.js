@@ -68,9 +68,8 @@ export default function BookSummary() {
                       </div>
                     </div>
 
-                    <div className="audio__wrapper">
                       <AudioPlayer book={book} />
-                    </div>
+                      
                   </div>
                 </div>
               </div>
