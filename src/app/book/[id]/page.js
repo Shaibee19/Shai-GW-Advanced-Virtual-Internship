@@ -1,6 +1,8 @@
 "use client";
 
 import BookSkeleton from "@/app/components/BookSkeleton";
+import Modal from "../../components/Modal";
+import Auth from "../../components/Auth";
 import Searchbar from "@/app/components/Searchbar";
 import Sidebar from "@/app/components/Sidebar";
 import { useEffect, useState } from "react";
@@ -16,6 +18,8 @@ export default function BookPage() {
   const [loading, setLoading] = useState(true);
   const [searchResults, setSearchResults] = useState([]);
   const [subscription, setSubscription] = useState(null);
+  const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
+  const [authMode, setAuthMode] = useState("login");
 
   // Fetch book details
   useEffect(() => {
@@ -54,12 +58,13 @@ export default function BookPage() {
   // Add book to library
   const handleAddToLibrary = async () => {
     if (!user) {
-      alert("Please log in to save books.");
+      setAuthMode("login");
+      setIsAuthModalOpen(true);
       return;
     }
     try {
       const ref = doc(db, "users", user.uid);
-      await updateDoc(ref, {
+      await setDoc(ref, {
         library: arrayUnion({
           id: book.id,
           title: book.title ?? "",
@@ -69,7 +74,7 @@ export default function BookPage() {
           keyIdeas: book.keyIdeas ?? [],
           duration: book.duration ?? "",
         }),
-      });
+      }, { merge: true }); // Creates the doc if missing and merges data
       alert("Book added to your library!");
     } catch (err) {
       console.error("Error adding book:", err);
@@ -109,6 +114,14 @@ export default function BookPage() {
 
   return (
     <>
+      <Modal isOpen={isAuthModalOpen} onClose={() => setIsAuthModalOpen(false)}>
+        <Auth
+          onClose={() => setIsAuthModalOpen(false)}
+          mode={authMode}
+          setMode={setAuthMode}
+        />
+      </Modal>
+
       <div id="__next">
         <div className="wrapper">
           <div className="page__layout">

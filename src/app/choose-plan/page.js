@@ -171,7 +171,6 @@ export default function ChoosePlan() {
             <div className="section__title">Choose the plan that fits you</div>
             <div
               className={`plan__card ${activePlan === "yearly" ? "plan__card--active" : ""}`}
-              onClick={upgradeToYearly}
             >
               <div className="plan__card--circle">
                 {activePlan === "yearly" && (
@@ -193,7 +192,6 @@ export default function ChoosePlan() {
 
             <div
               className={`plan__card ${activePlan === "monthly" ? "plan__card--active" : ""}`}
-              onClick={upgradeToMonthly}
             >
               <div className="plan__card--circle">
                 {activePlan === "monthly" && (
@@ -211,7 +209,11 @@ export default function ChoosePlan() {
                 <button
                   className="btn"
                   style={{ width: "300px" }}
-                  onClick={() => setIsAuthModalOpen(true)}
+                  onClick={() => setIsAuthModalOpen(true) 
+                    // onClick={upgradeToYearly}
+              // onClick={upgradeToMonthly}
+
+                  }
                 >
                   <span>
                     {activePlan === "yearly"

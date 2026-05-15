@@ -59,7 +59,7 @@ export default function Searchbar({ onResults }) {
               </div>
             </div>
 
-            <div className="sidebar__toggle--btn">
+            <div className="sidebar__toggle--btn" onClick>
               <svg
                 stroke="currentColor"
                 fill="none"
