@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { IoPersonSharp } from "react-icons/io5";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import Image from "next/image";
 import google from "../assets/google.png";
 import { doc, setDoc } from "firebase/firestore";
@@ -12,15 +12,38 @@ import {
   signInWithPopup,
   sendPasswordResetEmail,
 } from "firebase/auth";
-import { useRouter } from "next/navigation";
 
 export default function Auth({ onClose, mode, setMode }) {
   const pathname = usePathname();
+  const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [user, setUser] = useState(null);
   const [error, setError] = useState("");
-  const router = useRouter();
+
+  // After authentication, close the modal and navigate to the appropriate page
+  const afterAuth = () => {
+    onClose();
+    if (pathname === "/") {
+      router.push("/for-you");
+    } else {
+      router.refresh();
+    }
+  };
+
+  // Checks if the user document has a subscription object, and if not, it creates one with default values. 
+  const ensureSubscription = async (uid) => {
+    await setDoc(
+      doc(db, "users", uid),
+      {
+        subscription: {
+          plan: "basic",
+          status: "active",
+          periodEnd: null,
+        },
+      },
+      { merge: true }
+    );
+  };
 
   // Sign Up function
   const handleSignUp = async () => {
@@ -31,22 +54,9 @@ export default function Auth({ onClose, mode, setMode }) {
         password,
       );
       const user = userCredential.user;
-      // Create default subscription object
-      await setDoc(doc(db, "users", user.uid), {
-        subscription: {
-          plan: "basic",
-          status: "active",
-          periodEnd: null,
-        },
-      });
-      setUser(user);
+      await ensureSubscription(user.uid);
       setError("");
-      onClose(); // Close the modal on successful sign up
-      if (pathname === "/") {
-        router.push("/for-you");
-      } else {
-        router.refresh(); // stays on the same page
-      }
+      afterAuth();
     } catch (error) {
       setError(error.message);
     }
@@ -60,34 +70,28 @@ export default function Auth({ onClose, mode, setMode }) {
         email,
         password,
       );
-      setUser(userCredential.user);
+      const user = userCredential.user;
       setError("");
-      onClose(); // Close the modal on successful login
-      if (pathname === "/") {
-        router.push("/for-you");
-      } else {
-        router.refresh(); // stays on the same page
-      }
+      afterAuth();
     } catch (error) {
       setError(error.message);
     }
   };
 
-  // Send password reset email function
+  // Reset password/email function
   const handleReset = async () => {
     try {
       await sendPasswordResetEmail(auth, email);
       alert("Password reset email sent!");
       setMode("login");
-    } catch (err) {
-      console.log(err);
+    } catch (error) {
+      console.log(error);
     }
   };
 
   // Logout function
   const handleLogout = async () => {
     await signOut(auth);
-    setUser(null);
   };
 
   return (
@@ -100,18 +104,15 @@ export default function Auth({ onClose, mode, setMode }) {
             {mode === "signup" && "Sign up to Summarist"}
             {mode === "forgot" && "Reset your password"}
           </div>
+          {/* ERROR MESSAGE */}
+          {error && <div className="auth__error">{error}</div>}
           {/* LOGIN */}
           {mode === "login" && (
             <>
               <button
                 className="btn guest__btn--wrapper"
                 onClick={() => {
-                  onClose();
-                  if (pathname === "/") {
-                    router.push("/for-you");
-                  } else {
-                    router.refresh(); // stays on the same page
-                  }
+                  afterAuth();
                 }}
               >
                 <figure className="guest__icon--mask auth__icon--mask">
@@ -132,24 +133,9 @@ export default function Auth({ onClose, mode, setMode }) {
                   try {
                     const result = await signInWithPopup(auth, googleProvider);
                     const user = result.user;
-                    // Ensure subscription object exists
-                    await setDoc(
-                      doc(db, "users", user.uid),
-                      {
-                        subscription: {
-                          plan: "basic",
-                          status: "active",
-                          periodEnd: null,
-                        },
-                      },
-                      { merge: true },
-                    );
-                    onClose(); // Close the modal on successful login
-                    if (pathname === "/") {
-                      router.push("/for-you");
-                    } else {
-                      router.refresh(); // stays on the same page
-                    }
+                    await ensureSubscription(user.uid);
+                    setError("");
+                    afterAuth();
                   } catch (error) {
                     setError(error.message);
                   }
