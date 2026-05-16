@@ -37,7 +37,7 @@ export default function Home() {
   ];
   const statistics2 = [
     { number: "91%",
-      title: `of Summarist members <b>report feeling more productive</b>{" "} after incorporating the service into their daily routine.` },
+      title: `of Summarist members <b>report feeling more productive</b> after incorporating the service into their daily routine.` },
     { number: "94%",
       title: `of Summarist members have <b>noticed an improvement</b> in their overall comprehension and retention of information.` },
     { number: "88%",
@@ -110,7 +110,7 @@ export default function Home() {
             </div>
             <div className="features__wrapper">
               {features.map((feat, index) => (
-                <div className="features">
+                <div className="features" key={feat.id || feat.title}>
                   <div className="features__icon">{feat.icon}</div>
                   <div className="features__title">{feat.title}</div>
                   <div className="features__sub--title">{feat.subTitle}</div>
@@ -130,11 +130,11 @@ export default function Home() {
               />
               <div className="statistics__content--details">
                 {statistics.map((stat, index) => (
-                  <div className="statistics__data">
+                  <div className="statistics__data" key={index}>
                     <div className="statistics__data--number">
                       {stat.number}
                     </div>
-                    <div className="statistics__data--title">{stat.title}</div>
+                    <div className="statistics__data--title" dangerouslySetInnerHTML={{ __html: stat.title }} />
                   </div>
                 ))}
               </div>
@@ -142,11 +142,11 @@ export default function Home() {
             <div className="statistics__wrapper">
               <div className="statistics__content--details statistics__content--details-second">
                 {statistics2.map((stat, index) => (
-                  <div className="statistics__data">
+                  <div className="statistics__data" key={index}>
                     <div className="statistics__data--number">
                       {stat.number}
                     </div>
-                    <div className="statistics__data--title">{stat.title}</div>
+                    <div className="statistics__data--title" dangerouslySetInnerHTML={{ __html: stat.title }} />
                   </div>
                 ))}
               </div>
@@ -171,7 +171,7 @@ export default function Home() {
             <div className="section__title">What our members say</div>
             <div className="reviews__wrapper">
               {reviews.map((review, index) => (
-                <div className="review">
+                <div className="review" key={index}>
                   <div className="review__header">
                     <div className="review__name">{review.name}</div>
                     <div className="review__stars">
@@ -182,7 +182,7 @@ export default function Home() {
                       <BsStarFill />
                     </div>
                   </div>
-                  <div className="review__body">{review.body}</div>
+                  <div className="review__body" dangerouslySetInnerHTML={{ __html: review.body }} />
                 </div>
               ))}
             </div>

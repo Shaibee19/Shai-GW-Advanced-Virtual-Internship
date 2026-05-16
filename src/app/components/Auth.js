@@ -1,8 +1,10 @@
 import { useState } from "react";
 import { IoPersonSharp } from "react-icons/io5";
+import { usePathname } from "next/navigation";
 import Image from "next/image";
 import google from "../assets/google.png";
-import { auth, googleProvider } from "../firebase";
+import { doc, setDoc } from "firebase/firestore";
+import { auth, googleProvider, db } from "../firebase";
 import {
   signInWithEmailAndPassword,
   createUserWithEmailAndPassword,
@@ -13,6 +15,7 @@ import {
 import { useRouter } from "next/navigation";
 
 export default function Auth({ onClose, mode, setMode }) {
+  const pathname = usePathname();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [user, setUser] = useState(null);
@@ -27,10 +30,23 @@ export default function Auth({ onClose, mode, setMode }) {
         email,
         password,
       );
-      setUser(userCredential.user);
+      const user = userCredential.user;
+      // Create default subscription object
+      await setDoc(doc(db, "users", user.uid), {
+        subscription: {
+          plan: "basic",
+          status: "active",
+          periodEnd: null,
+        },
+      });
+      setUser(user);
       setError("");
       onClose(); // Close the modal on successful sign up
-      router.push("/for-you");
+      if (pathname === "/") {
+        router.push("/for-you");
+      } else {
+        router.refresh(); // stays on the same page
+      }
     } catch (error) {
       setError(error.message);
     }
@@ -47,7 +63,11 @@ export default function Auth({ onClose, mode, setMode }) {
       setUser(userCredential.user);
       setError("");
       onClose(); // Close the modal on successful login
-      router.push("/for-you");
+      if (pathname === "/") {
+        router.push("/for-you");
+      } else {
+        router.refresh(); // stays on the same page
+      }
     } catch (error) {
       setError(error.message);
     }
@@ -85,7 +105,14 @@ export default function Auth({ onClose, mode, setMode }) {
             <>
               <button
                 className="btn guest__btn--wrapper"
-                onClick={() => {onClose(); router.push("/for-you")}}
+                onClick={() => {
+                  onClose();
+                  if (pathname === "/") {
+                    router.push("/for-you");
+                  } else {
+                    router.refresh(); // stays on the same page
+                  }
+                }}
               >
                 <figure className="guest__icon--mask auth__icon--mask">
                   <IoPersonSharp />
@@ -104,8 +131,25 @@ export default function Auth({ onClose, mode, setMode }) {
                 onClick={async () => {
                   try {
                     await signInWithPopup(auth, googleProvider);
+                    const user = result.user;
+                    // Ensure subscription object exists
+                    await setDoc(
+                      doc(db, "users", user.uid),
+                      {
+                        subscription: {
+                          plan: "basic",
+                          status: "active",
+                          periodEnd: null,
+                        },
+                      },
+                      { merge: true },
+                    );
                     onClose(); // Close the modal on successful login
-                    router.push("/for-you");
+                    if (pathname === "/") {
+                      router.push("/for-you");
+                    } else {
+                      router.refresh(); // stays on the same page
+                    }
                   } catch (error) {
                     setError(error.message);
                   }

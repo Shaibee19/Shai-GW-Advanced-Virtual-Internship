@@ -124,6 +124,7 @@ export default function ChoosePlan() {
                     <path d="M854.6 288.7c6 6 9.4 14.1 9.4 22.6V928c0 17.7-14.3 32-32 32H192c-17.7 0-32-14.3-32-32V96c0-17.7 14.3-32 32-32h424.7c8.5 0 16.7 3.4 22.7 9.4l215.2 215.3zM790.2 326L602 137.8V326h188.2zM320 482a8 8 0 0 0-8 8v48a8 8 0 0 0 8 8h384a8 8 0 0 0 8-8v-48a8 8 0 0 0-8-8H320zm0 136a8 8 0 0 0-8 8v48a8 8 0 0 0 8 8h184a8 8 0 0 0 8-8v-48a8 8 0 0 0-8-8H320z"></path>
                   </svg>
                 </figure>
+                
                 <div className="plan__features--text">
                   <b>Key ideas in few min</b> with many books to read
                 </div>
@@ -169,8 +170,11 @@ export default function ChoosePlan() {
               </div>
             </div>
             <div className="section__title">Choose the plan that fits you</div>
+
+            {/* YEARLY PLAN */}
             <div
               className={`plan__card ${activePlan === "yearly" ? "plan__card--active" : ""}`}
+              onClick={() => setActivePlan("yearly")}
             >
               <div className="plan__card--circle">
                 {activePlan === "yearly" && (
@@ -190,8 +194,10 @@ export default function ChoosePlan() {
               <div className="plan__separator">or</div>
             </div>
 
+            {/* MONTHLY PLAN */}
             <div
               className={`plan__card ${activePlan === "monthly" ? "plan__card--active" : ""}`}
+              onClick={() => setActivePlan("monthly")}
             >
               <div className="plan__card--circle">
                 {activePlan === "monthly" && (
@@ -204,17 +210,29 @@ export default function ChoosePlan() {
                 <div className="plan__card--text">No trial included</div>
               </div>
             </div>
+
+            {/* CTA BUTTON */}
             <div className="plan__card--cta">
               <span className="btn--wrapper">
                 <button
                   className="btn"
                   style={{ width: "300px" }}
-                  onClick={() => setIsAuthModalOpen(true) 
-                    // onClick={upgradeToYearly}
-              // onClick={upgradeToMonthly}
+                  onClick={() => {
+                    if (!activePlan) return;
 
-                  }
-                >
+                    if (!user) {
+                      setAuthMode("login");
+                      setIsAuthModalOpen(true);
+                      return;
+                    }
+
+                    if (activePlan === "yearly") {
+                      upgradeToYearly();
+                    } else if (activePlan === "monthly") {
+                      upgradeToMonthly();
+                    }
+                    }}
+                    >
                   <span>
                     {activePlan === "yearly"
                       ? "Start your free 7-day trial"

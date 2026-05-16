@@ -34,14 +34,13 @@ const Page = () => {
         const snap = await getDoc(ref);
 
         if (snap.exists()) {
-          setSubscription(snap.data().subscription?.plan || "free");
+          setSubscription(snap.data().subscription?.plan ?? "basic");
         }
       } catch (err) {
         console.error(err);
       } finally {
         setLoading(false);
       }
-
     };
 
     fetchUserData();
@@ -53,10 +52,23 @@ const Page = () => {
   if (loading) {
     return (
       <>
-        <div className="skeleton" style={{ width: "160px", height: "24px", marginBottom: "12px", }}></div>
-        <div className="skeleton" style={{ width: "280px", height: "24px", marginBottom: "32px", }}></div>
-        <div className="skeleton" style={{ width: "160px", height: "24px", marginBottom: "12px", }}></div>
-        <div className="skeleton" style={{ width: "280px", height: "24px" }}></div>;
+        <div
+          className="skeleton"
+          style={{ width: "160px", height: "24px", marginBottom: "12px" }}
+        ></div>
+        <div
+          className="skeleton"
+          style={{ width: "280px", height: "24px", marginBottom: "32px" }}
+        ></div>
+        <div
+          className="skeleton"
+          style={{ width: "160px", height: "24px", marginBottom: "12px" }}
+        ></div>
+        <div
+          className="skeleton"
+          style={{ width: "280px", height: "24px" }}
+        ></div>
+        ;
       </>
     );
   }
@@ -125,6 +137,15 @@ const Page = () => {
                           </button>
                         </div>
                       </>
+                    )}
+                    
+                    {subscription === "basic" && (
+                      <button
+                        className="btn"
+                        onClick={() => router.push("/choose-plan")}
+                      >
+                        Upgrade to Premium
+                      </button>
                     )}
                   </div>
                 </div>

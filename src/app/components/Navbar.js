@@ -14,8 +14,11 @@ export default function Navbar({ onLoginClick }) {
           <Image className="nav__img" src={logo} alt="logo" priority />
         </figure>
         <ul className="nav__list--wrapper">
-          <li className="nav__list nav__list--login" onClick={user ? () => signOut(auth) : onLoginClick}>
-  {user ? "Logout" : "Login"}
+          <li
+            className="nav__list nav__list--login"
+            onClick={user ? () => signOut(auth) : onLoginClick}
+          >
+            Login
           </li>
           <li className="nav__list nav__list--mobile">About</li>
           <li className="nav__list nav__list--mobile">Contact</li>
