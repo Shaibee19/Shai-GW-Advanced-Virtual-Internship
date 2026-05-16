@@ -130,7 +130,7 @@ export default function Auth({ onClose, mode, setMode }) {
                 className="btn google__btn--wrapper"
                 onClick={async () => {
                   try {
-                    await signInWithPopup(auth, googleProvider);
+                    const result = await signInWithPopup(auth, googleProvider);
                     const user = result.user;
                     // Ensure subscription object exists
                     await setDoc(
