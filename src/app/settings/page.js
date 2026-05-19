@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { useAuth } from "../context/AuthContext";
 import Searchbar from "@/app/components/Searchbar";
+import BookCard from "../components/BookCard";
 import Sidebar from "@/app/components/Sidebar";
 import Modal from "@/app/components/Modal";
 import Auth from "@/app/components/Auth";
@@ -20,6 +21,7 @@ const Page = () => {
   // mode !== "login" && mode !== "signup"
   const [subscription, setSubscription] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
 
   useEffect(() => {
     if (!user) {
@@ -87,6 +89,8 @@ const Page = () => {
         <div className="wrapper">
           <div className="page__layout">
             <Sidebar
+              isOpen={sidebarOpen}
+              onClose={() => setSidebarOpen(false)}
               onLoginClick={() => {
                 setAuthMode("login");
                 setIsAuthModalOpen(true);
@@ -94,7 +98,17 @@ const Page = () => {
             />
 
             <div className="page__content">
-              <Searchbar onResults={setSearchResults} />
+              <Searchbar 
+                onToggleSidebar={() => setSidebarOpen(true)} 
+                onResults={setSearchResults} 
+              />
+              {searchResults.length > 0 && (
+                <div className="search__results">
+                  {searchResults.map((book) => (
+                    <BookCard key={book.id || index} book={book} />
+                  ))}
+                </div>
+              )}
 
               <div className="row">
                 <div className="container">

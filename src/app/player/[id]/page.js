@@ -1,16 +1,19 @@
 "use client";
 
-import Searchbar from "@/app/components/Searchbar";
+import Searchbar from "../../components/Searchbar";
 import Sidebar from "@/app/components/Sidebar";
 import AudioPlayer from "@/app/components/AudioPlayer";
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
+import { useFontSize } from "@/app/context/FontSizeContext";
 
 export default function BookSummary() {
   const { id } = useParams();
   const [book, setBook] = useState(null);
   const [loading, setLoading] = useState(true);
   const [searchResults, setSearchResults] = useState([]);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const { fontSize } = useFontSize();
 
   useEffect(() => {
     async function fetchBook() {
@@ -39,19 +42,26 @@ export default function BookSummary() {
         <div className="wrapper">
           <div className="page__layout">
             <Sidebar
-            // mode={mode}
-            // setMode={setMode}
-            // onLoginClick={() => {
-            //   setAuthMode("login");
-            //   setIsAuthModalOpen(true);
-            // }}
-            // onLogoutClick={() => {
-            //   setMode("login"); // or however you represent logged-out state
-            // }}
+              isOpen={sidebarOpen}
+              onClose={() => setSidebarOpen(false)}
+              onLoginClick={() => {
+                setAuthMode("login");
+                setIsAuthModalOpen(true);
+              }}
             />
 
             <div className="page__content">
-              <Searchbar onResults={setSearchResults} />
+              <Searchbar 
+                onToggleSidebar={() => setSidebarOpen(true)} 
+                onResults={setSearchResults} 
+              />
+              {searchResults.length > 0 && (
+                <div className="search__results">
+                  {searchResults.map((book) => (
+                    <BookCard key={book.id || index} book={book} />
+                  ))}
+                </div>
+              )}
 
               <div className="row">
                 <div className="container">
@@ -63,7 +73,7 @@ export default function BookSummary() {
                       <div className="audio__book--summary-title">
                         <b>{book.title}</b>
                       </div>
-                      <div className="audio__book--summary-text">
+                      <div className={`audio__book--summary-text player__summary player__summary--${fontSize}`}>
                         {book.summary}
                       </div>
                     </div>

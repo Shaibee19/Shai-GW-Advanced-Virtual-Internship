@@ -14,6 +14,7 @@ const Page = () => {
   const [searchResults, setSearchResults] = useState([]);
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
   const [authMode, setAuthMode] = useState("login");
+  const [sidebarOpen, setSidebarOpen] = useState(false);
 
   return (
     <>
@@ -28,7 +29,10 @@ const Page = () => {
       <div id="__next">
         <div className="wrapper">
           <div className="page__layout">
+
             <Sidebar
+              isOpen={sidebarOpen}
+              onClose={() => setSidebarOpen(false)}
               onLoginClick={() => {
                 setAuthMode("login");
                 setIsAuthModalOpen(true);
@@ -36,7 +40,10 @@ const Page = () => {
             />
 
             <div className="page__content">
-              <Searchbar onResults={setSearchResults} />
+              <Searchbar 
+                onToggleSidebar={() => setSidebarOpen(true)} 
+                onResults={setSearchResults} 
+              />
               {searchResults.length > 0 && (
                 <div className="search__results">
                   {searchResults.map((book) => (

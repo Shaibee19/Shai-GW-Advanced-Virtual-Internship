@@ -5,6 +5,12 @@ import { useEffect, useState } from "react";
 export default function Selected() {
   const [book, setBook] = useState(null);
   const [loading, setLoading] = useState(true);
+  const formatDurationText = (time) => {
+    if (!time || isNaN(time)) return "0 mins 0 secs";
+    const minutes = Math.floor(time / 60);
+    const seconds = Math.floor(time % 60);
+    return `${minutes} mins ${seconds} secs`;
+  };
 
   useEffect(() => {
     async function fetchSelectedBook() {
@@ -69,7 +75,7 @@ export default function Selected() {
                 </div>
 
                 {/* Duration */}
-                <div className="selected__book--duration">{book.duration}</div>
+                <div className="selected__book--duration">{formatDurationText(book.duration)}</div>
               </div>
             </div>
           </div>

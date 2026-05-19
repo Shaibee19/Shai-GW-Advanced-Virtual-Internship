@@ -2,7 +2,10 @@
 
 import { useEffect, useState } from "react";
 
-export default function Searchbar({ onResults }) {
+export default function Searchbar({
+  onResults = () => {},
+  onToggleSidebar = () => {},
+}) {
   const [search, setSearch] = useState("");
   const [loading, setLoading] = useState(false);
 
@@ -36,6 +39,8 @@ export default function Searchbar({ onResults }) {
       <div className="search__wrapper">
         <div className="search__content">
           <div className="search">
+            
+            {/* SEARCH INPUT */}
             <div className="search__input--wrapper">
               <input
                 className="search__input"
@@ -59,9 +64,8 @@ export default function Searchbar({ onResults }) {
               </div>
             </div>
 
-            <div className="sidebar__toggle--btn" 
-            // onClick
-            >
+            {/* SIDEBAR TOGGLE BUTTON */}
+            <div className="sidebar__toggle--btn" onClick={onToggleSidebar}>
               <svg
                 stroke="currentColor"
                 fill="none"

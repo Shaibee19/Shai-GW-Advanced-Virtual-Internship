@@ -62,6 +62,7 @@ button:disabled {
   display: flex;
   flex-direction: column;
   width: 100%;
+  margin-left: 240px;
 }
 
 .btn {
@@ -490,9 +491,13 @@ button:disabled {
   border-right: 1px solid #e5e7eb;
   width: 240px;
   min-width: 240px;
-  position: static;
-  height: calc(100vh - 0px);
+  position: fixed;
+  height: 100vh;
+  top: 0;
+  left: 0;
   overflow-y: auto;
+  z-index: 20;
+  transition: transform 0.3s ease;
 }
 
 .sidebar__overlay {
@@ -843,6 +848,34 @@ button:disabled {
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
+/* SEARCH BOOK */
+
+.search-result {
+  display: flex;
+  gap: 12px;
+  padding: 12px;
+  border-bottom: 1px solid #eee;
+  cursor: pointer;
+}
+
+.search-result__img {
+  width: 48px;
+  height: 72px;
+  object-fit: cover;
+  border-radius: 4px;
+}
+
+.search-result__title {
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.search-result__author {
+  font-size: 12px;
+  color: #6b757b;
+}
+
+
 /* INNER BOOK */
 
 .inner__wrapper {
@@ -1105,7 +1138,7 @@ audio {
 .audio__controls--btn svg {
   width: 28px;
   height: 28px;
-  stroke: #fff;
+  color: #fff;
   transition: all 0.2s;
 }
 
@@ -1123,6 +1156,7 @@ audio {
   display: flex;
   align-items: center;
   gap: 16px;
+  color: #fff;
 }
 
 .audio__time {
@@ -1188,6 +1222,29 @@ audio {
 .btn.settings__login--btn {
   width: 100px;
 }
+
+/* PLAYER SUMMARY */
+
+.player__summary--small {
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.player__summary--medium {
+  font-size: 16px;
+  line-height: 1.7;
+}
+
+.player__summary--large {
+  font-size: 18px;
+  line-height: 1.8;
+}
+
+.player__summary--xlarge {
+  font-size: 20px;
+  line-height: 1.9;
+}
+
 
 /* PLAN PAGE */
 
@@ -1721,6 +1778,10 @@ audio {
 
   .sidebar__toggle--btn {
     display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-left: 12px;
+    cursor: pointer;
   }
 
   .landing__content {
@@ -1810,6 +1871,27 @@ audio {
 
   .remove--tablet {
     display: none;
+  }
+
+  .audio__wrapper {
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+  }
+
+  .audio__track--wrapper {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+
+  .audio__controls--wrapper {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .audio__progress--wrapper {
+    width: 100%;
   }
 
   .plan__header--wrapper:before {

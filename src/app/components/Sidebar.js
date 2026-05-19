@@ -7,16 +7,18 @@ import Image from "next/image";
 import logo from "../assets/logo.png";
 import { signOut } from "firebase/auth";
 import { auth } from "../firebase";
+import { useFontSize } from "@/app/context/FontSizeContext";
 
-export default function Sidebar({ onLoginClick }) {
+export default function Sidebar({ isOpen, onClose, onLoginClick }) {
   const { user } = useAuth(); // GLOBAL AUTH STATE
-  const [isOpen, setIsOpen] = useState(false);
+  // const [isOpen, setIsOpen] = useState(false);
   const pathname = usePathname();
   const activeLink = pathname.split("/")[1]; // "for-you", "library", "settings", "player"
   // const [isAuthOpen, setIsAuthOpen] = useState(false);
+  const { fontSize, setFontSize } = useFontSize();
 
-  const openSidebar = () => setIsOpen(true);
-  const closeSidebar = () => setIsOpen(false);
+  // const openSidebar = () => setIsOpen(true);
+  // const closeSidebar = () => setIsOpen(false);
 
   // const [currentUser, setCurrentUser] = useState(null);
 
@@ -42,7 +44,7 @@ export default function Sidebar({ onLoginClick }) {
       {/* OVERLAY */}
       <div
         className={`sidebar__overlay ${isOpen ? "" : "sidebar__overlay--hidden"}`}
-        onClick={closeSidebar}
+        onClick={onClose}
       ></div>
 
       {/* SIDEBAR */}
@@ -141,15 +143,18 @@ export default function Sidebar({ onLoginClick }) {
             {/* FONT SIZE (Only on Player) */}
             {pathname.startsWith("/player") && (
               <div className="sidebar__link--wrapper sidebar__font--size-wrapper">
-                <div className="sidebar__link--text sidebar__font--size-icon sidebar__font--size-icon--active">
+                <div 
+                  className={`sidebar__link--text sidebar__font--size-icon ${fontSize === "small" ? "sidebar__font--size-icon--active" : ""}`}
+                  onClick={() => setFontSize("small")}
+                >
                   <svg
                     stroke="currentColor"
                     fill="currentColor"
                     strokeWidth="0"
                     viewBox="0 0 24 24"
                     className="sidebar__font--size-icon-small"
-                    height="1em"
-                    width="1em"
+                    height="1.5em"
+                    width="1.5em"
                     xmlns="http://www.w3.org/2000/svg"
                   >
                     <g>
@@ -158,15 +163,18 @@ export default function Sidebar({ onLoginClick }) {
                     </g>
                   </svg>
                 </div>
-                <div className="sidebar__link--text sidebar__font--size-icon">
+                <div 
+                  className={`sidebar__link--text sidebar__font--size-icon ${fontSize === "medium" ? "sidebar__font--size-icon--active" : ""}`}
+                  onClick={() => setFontSize("medium")}
+                >
                   <svg
                     stroke="currentColor"
                     fill="currentColor"
                     strokeWidth="0"
                     viewBox="0 0 24 24"
                     className="sidebar__font--size-icon-medium"
-                    height="1em"
-                    width="1em"
+                    height="2em"
+                    width="2em"
                     xmlns="http://www.w3.org/2000/svg"
                   >
                     <g>
@@ -175,15 +183,18 @@ export default function Sidebar({ onLoginClick }) {
                     </g>
                   </svg>
                 </div>
-                <div className="sidebar__link--text sidebar__font--size-icon">
+                <div 
+                  className={`sidebar__link--text sidebar__font--size-icon ${fontSize === "large" ? "sidebar__font--size-icon--active" : ""}`}
+                  onClick={() => setFontSize("large")}
+                >
                   <svg
                     stroke="currentColor"
                     fill="currentColor"
                     strokeWidth="0"
                     viewBox="0 0 24 24"
                     className="sidebar__font--size-icon-large"
-                    height="1em"
-                    width="1em"
+                    height="2.5em"
+                    width="2.5em"
                     xmlns="http://www.w3.org/2000/svg"
                   >
                     <g>
@@ -192,15 +203,18 @@ export default function Sidebar({ onLoginClick }) {
                     </g>
                   </svg>
                 </div>
-                <div className="sidebar__link--text sidebar__font--size-icon">
+                <div 
+                  className={`sidebar__link--text sidebar__font--size-icon ${fontSize === "xlarge" ? "sidebar__font--size-icon--active" : ""}`}
+                  onClick={() => setFontSize("xlarge")}
+                >
                   <svg
                     stroke="currentColor"
                     fill="currentColor"
                     strokeWidth="0"
                     viewBox="0 0 24 24"
                     className="sidebar__font--size-icon-xlarge"
-                    height="1em"
-                    width="1em"
+                    height="3em"
+                    width="3em"
                     xmlns="http://www.w3.org/2000/svg"
                   >
                     <g>

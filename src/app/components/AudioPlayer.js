@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
+import { RiReplay10Fill, RiForward10Line } from "react-icons/ri";
 
 export default function AudioPlayer({ book }) {
   // State variables
@@ -147,16 +148,7 @@ export default function AudioPlayer({ book }) {
 
           {/* Back 10 */}
           <button className="audio__controls--btn" onClick={skipBackward}>
-           <svg
-              stroke="currentColor"
-              fill="currentColor"
-              strokeWidth="0"
-              viewBox="0 0 24 24"
-              height="1em"
-              width="1em"
-            >
-              <path d="M11 5V2L6 7l5 5V9c3.309 0 6 2.691 6 6 0 1.355-.453 2.599-1.211 3.605l1.518 1.307C18.488 18.57 19 17.088 19 15.5 19 11.916 16.084 9 12.5 9H11z"></path>
-            </svg>
+           <RiReplay10Fill />
           </button>
 
           {/* Play / Pause */}
@@ -191,16 +183,7 @@ export default function AudioPlayer({ book }) {
 
           {/* Forward 10 */}
           <button className="audio__controls--btn" onClick={skipForward}>
-            <svg
-              stroke="currentColor"
-              fill="currentColor"
-              strokeWidth="0"
-              viewBox="0 0 24 24"
-              height="1em"
-              width="1em"
-            >
-              <path d="M13 5V2l5 5-5 5V9c-3.309 0-6 2.691-6 6 0 1.355.453 2.599 1.211 3.605l-1.518 1.307C5.512 18.57 5 17.088 5 15.5 5 11.916 7.916 9 11.5 9H13z"></path>
-            </svg>
+            <RiForward10Line />
           </button>
         </div>
       </div>
