@@ -10,6 +10,7 @@ import { useParams } from "next/navigation";
 import { useAuth } from "../../context/AuthContext";
 import { db } from "../../firebase";
 import { doc, getDoc, updateDoc, arrayUnion, setDoc } from "firebase/firestore";
+import { IoBookmarkOutline, IoBookmark } from "react-icons/io5";
 
 export default function BookPage() {
   const { id } = useParams();
@@ -21,6 +22,7 @@ export default function BookPage() {
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
   const [authMode, setAuthMode] = useState("login");
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [isSaved, setIsSaved] = useState(false);
 
   // Fetch book details
   useEffect(() => {
@@ -61,22 +63,37 @@ export default function BookPage() {
     if (!user) {
       setAuthMode("login");
       setIsAuthModalOpen(true);
+      setIsSaved(!isSaved);
       return;
     }
     try {
       const ref = doc(db, "users", user.uid);
-      await setDoc(ref, {
-        library: arrayUnion({
-          id: book.id,
-          title: book.title ?? "",
-          author: book.author ?? "",
-          imageLink: book.imageLink ?? "",
-          duration: book.duration ?? "",
-          summary: book.summary ?? "",
-          keyIdeas: book.keyIdeas ?? [],
-        }),
-      }, { merge: true }); // Creates the doc if missing and merges data
-      alert("Book added to your library!");
+      const snap = await getDoc(ref);
+
+      let library = snap.exists() && snap.data().library ? snap.data().library : [];
+
+      const exists = library.some((item) => item.id === book.id);
+
+      if (exists) {
+      // REMOVE BOOK
+      const updated = library.filter((item) => item.id !== book.id);
+      await updateDoc(ref, { library: updated });
+      alert("Removed from your library");
+      } else {
+        // ADD BOOK
+        await updateDoc(ref, {
+          library: arrayUnion({
+            id: book.id,
+            title: book.title ?? "",
+            author: book.author ?? "",
+            imageLink: book.imageLink ?? "",
+            duration: book.duration ?? "",
+            summary: book.summary ?? "",
+            keyIdeas: book.keyIdeas ?? [],
+          }),
+        }); //{ merge: true }); Creates the doc if missing and merges data
+        alert("Book added to your library!");
+      }
     } catch (err) {
       console.error("Error adding book:", err);
     }
@@ -102,6 +119,21 @@ export default function BookPage() {
     return `${minutes.toString().padStart(2, "0")}:${secs.toString().padStart(2, "0")}`;
   };
 
+  // Check if book is in user's library
+  useEffect(() => {
+  if (!user || !book) return;
+
+  const checkSaved = async () => {
+    const ref = doc(db, "users", user.uid);
+    const snap = await getDoc(ref);
+    if (snap.exists()) {
+      const library = snap.data().library || [];
+      setIsSaved(library.some((item) => item.id === book.id));
+    }
+  };
+
+  checkSaved();
+}, [user, book]);
 
   if (loading)
     return (
@@ -263,13 +295,15 @@ export default function BookPage() {
                         className="inner-book__bookmark"
                         >
                         <div className="inner-book__bookmark--icon">
-                          <svg stroke="currentColor" fill="currentColor" strokeWidth="0" viewBox="0 0 16 16" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M2 2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v13.5a.5.5 0 0 1-.777.416L8 13.101l-5.223 2.815A.5.5 0 0 1 2 15.5V2zm2-1a1 1 0 0 0-1 1v12.566l4.723-2.482a.5.5 0 0 1 .554 0L13 14.566V2a1 1 0 0 0-1-1H4z"></path>
-                          </svg>
+                          {isSaved ? (
+                            <IoBookmark />
+                          ) : (
+                            <IoBookmarkOutline />
+                          )}
                         </div>
                         <div className="inner-book__bookmark--text"
                         onClick={handleAddToLibrary}>
-                          Add title to My Library
+                          {isSaved ? "Saved in My Library" : "Add title to My Library"}
                         </div>
                       </div>
                       <div className="inner-book__secondary--title">

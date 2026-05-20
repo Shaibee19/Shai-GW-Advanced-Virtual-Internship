@@ -1877,7 +1877,7 @@ audio {
     flex-direction: column;
     align-items: center;
     gap: 16px;
-    height: 240px;
+    height: 200px;
   }
 
   .audio__track--wrapper {
