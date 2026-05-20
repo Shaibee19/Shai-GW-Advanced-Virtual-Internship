@@ -9,7 +9,7 @@ import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import { useAuth } from "../../context/AuthContext";
 import { db } from "../../firebase";
-import { doc, getDoc, updateDoc, arrayUnion } from "firebase/firestore";
+import { doc, getDoc, updateDoc, arrayUnion, setDoc } from "firebase/firestore";
 
 export default function BookPage() {
   const { id } = useParams();
@@ -71,9 +71,9 @@ export default function BookPage() {
           title: book.title ?? "",
           author: book.author ?? "",
           imageLink: book.imageLink ?? "",
+          duration: book.duration ?? "",
           summary: book.summary ?? "",
           keyIdeas: book.keyIdeas ?? [],
-          duration: book.duration ?? "",
         }),
       }, { merge: true }); // Creates the doc if missing and merges data
       alert("Book added to your library!");
@@ -90,6 +90,18 @@ export default function BookPage() {
       window.location.href = `/player/${book.id}`;
     }
   };
+
+  // Format duration text
+  const formatDurationText = (time) => {
+    const seconds = Number(time);
+    if (!seconds || isNaN(seconds)) return "00:00";
+
+    const minutes = Math.floor(seconds / 60);
+    const secs = Math.floor(seconds % 60);
+
+    return `${minutes.toString().padStart(2, "0")}:${secs.toString().padStart(2, "0")}`;
+  };
+
 
   if (loading)
     return (
@@ -142,7 +154,7 @@ export default function BookPage() {
               />
               {searchResults.length > 0 && (
                 <div className="search__results">
-                  {searchResults.map((book) => (
+                  {searchResults.map((book, index) => (
                     <BookCard key={book.id || index} book={book} />
                   ))}
                 </div>
@@ -189,7 +201,7 @@ export default function BookPage() {
                               </svg>
                             </div>
                             <div className="inner-book__duration">
-                              {book.duration}
+                              {formatDurationText(book.duration)}
                             </div>
                           </div>
 
@@ -224,7 +236,7 @@ export default function BookPage() {
                       <div className="inner-book__read--btn-wrapper">
                         <button
                           className="inner-book__read--btn"
-                          href={handleAccess}
+                          onClick={handleAccess}
                         >
                           <div className="inner-book__read--icon">
                             <svg stroke="currentColor" fill="currentColor" strokeWidth="0" viewBox="0 0 1024 1024" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg">
@@ -235,7 +247,7 @@ export default function BookPage() {
                         </button>
                         <button
                           className="inner-book__read--btn"
-                          href={handleAccess}
+                          onClick={handleAccess}
                         >
                           <div className="inner-book__read--icon">
                             <svg stroke="currentColor" fill="currentColor" strokeWidth="0" viewBox="0 0 1024 1024" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg">
