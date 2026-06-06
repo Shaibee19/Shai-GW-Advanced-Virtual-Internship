@@ -152,7 +152,7 @@ export default function Library() {
                         <div className="settings__login--wrapper">
                           <Image src={settings} alt="settings login" priority />
                           <div className="settings__login--text">
-                            Log in to your account to see your details.
+                            Log in to your account to see your library.
                           </div>
 
                           <button

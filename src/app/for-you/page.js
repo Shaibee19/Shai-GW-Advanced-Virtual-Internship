@@ -15,7 +15,7 @@ const Page = () => {
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
   const [authMode, setAuthMode] = useState("login");
   const [sidebarOpen, setSidebarOpen] = useState(false);
-
+  
   return (
     <>
       <Modal isOpen={isAuthModalOpen} onClose={() => setIsAuthModalOpen(false)}>

@@ -11,6 +11,7 @@ import {
   signOut,
   signInWithPopup,
   sendPasswordResetEmail,
+  signInAnonymously,
 } from "firebase/auth";
 
 export default function Auth({ onClose, mode, setMode }) {
@@ -111,7 +112,8 @@ export default function Auth({ onClose, mode, setMode }) {
             <>
               <button
                 className="btn guest__btn--wrapper"
-                onClick={() => {
+                onClick={async () => {
+                  await signInAnonymously(auth);
                   afterAuth();
                 }}
               >
