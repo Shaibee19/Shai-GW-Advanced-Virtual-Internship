@@ -11,23 +11,9 @@ import { useFontSize } from "@/app/context/FontSizeContext";
 
 export default function Sidebar({ isOpen, onClose, onLoginClick }) {
   const { user } = useAuth(); // GLOBAL AUTH STATE
-  // const [isOpen, setIsOpen] = useState(false);
   const pathname = usePathname();
   const activeLink = pathname.split("/")[1]; // "for-you", "library", "settings", "player"
-  // const [isAuthOpen, setIsAuthOpen] = useState(false);
   const { fontSize, setFontSize } = useFontSize();
-
-  // const openSidebar = () => setIsOpen(true);
-  // const closeSidebar = () => setIsOpen(false);
-
-  // const [currentUser, setCurrentUser] = useState(null);
-
-  // useEffect(() => {
-  //   const unsubscribe = onAuthStateChanged(auth, (user) => {
-  //     setCurrentUser(user);
-  //   });
-  //   return () => unsubscribe();
-  // }, []);
 
   const handleLogout = async () => {
     try {
