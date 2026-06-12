@@ -404,27 +404,27 @@ button:disabled {
 .search__background {
   background-color: #ffffff;
   border-bottom: 1px solid #e1e7ea;
-  height: 80px;
-  z-index: 1;
+  height: 64px;
+  display: flex;
+  align-items: center;
+  z-index: 10;
   width: 100%;
 }
 
 .search__wrapper {
-  position: relative;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0 32px;
+  padding: 0 24px;
   max-width: 1070px;
   margin: 0 auto;
-  height: 100%;
+  width: 100%;
 }
 
 .search__content {
   display: flex;
   align-items: center;
-  gap: 24px;
-  max-width: 340px;
+  gap: 16px;
   width: 100%;
 }
 
@@ -441,14 +441,15 @@ button:disabled {
 }
 
 .search__input {
-  height: 40px;
+  height: 36px;
   width: 100%;
-  padding: 0 16px;
+  padding: 0 36px 0 12px;
   outline: none;
   background-color: #f1f6f4;
   color: #042330;
-  border: 2px solid #e1e7ea;
-  border-radius: 8px;
+  border: 1px solid #d5e0e4;
+  border-radius: 6px;
+  font-size: 14px;
 }
 
 .search__icon {
@@ -456,10 +457,14 @@ button:disabled {
   align-items: center;
   position: absolute;
   height: 100%;
-  right: 8px;
-  justify-content: flex-end;
+  right: 10px;
   border-left: 2px solid #e1e7ea;
-  padding-left: 8px;
+  color: #6b7b83;
+  top: 0;
+}
+
+.sidebar__toggle--btn {
+  display: none;
 }
 
 /* FOR YOU */
@@ -863,31 +868,57 @@ button:disabled {
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
+
 /* SEARCH BOOK */
 
-.search-result {
+.search-results {
+  margin-top: 16px;
   display: flex;
+  flex-direction: column;
   gap: 12px;
+}
+
+.search-result__item {
+  display: flex;
+  align-items: center;
+  gap: 16px;
   padding: 12px;
-  border-bottom: 1px solid #eee;
+  border-radius: 6px;
   cursor: pointer;
+  transition: background-color 0.15s ease;
+}
+
+.search-result__item:hover {
+  background-color: #f1f6f4;
 }
 
 .search-result__img {
   width: 48px;
-  height: 72px;
-  object-fit: cover;
+  height: 48px;
   border-radius: 4px;
+  object-fit: cover;
+}
+
+.search-result__info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
 }
 
 .search-result__title {
-  font-size: 14px;
+  font-size: 15px;
   font-weight: 600;
+  color: #032b41;
 }
 
 .search-result__author {
-  font-size: 12px;
+  font-size: 13px;
   color: #6b757b;
+}
+
+.search-result__duration {
+  font-size: 12px;
+  color: #6b7b83;
 }
 
 

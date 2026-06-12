@@ -6,6 +6,7 @@ import AudioPlayer from "@/app/components/AudioPlayer";
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import { useFontSize } from "@/app/context/FontSizeContext";
+import BookCard from "@/app/components/BookCard";
 
 export default function BookSummary() {
   const { id } = useParams();

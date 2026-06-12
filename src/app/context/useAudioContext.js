@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react"
 
-export function AudioContext(audioUrl) {
+export default function useAudioContext(audioUrl) {
     const [duration, setDuration] = useState(null);
 
     useEffect(() => {
@@ -11,8 +11,10 @@ export function AudioContext(audioUrl) {
         const audio = new Audio();
         audio.preload = "metadata";
 
-        const onLoadedMetadata = () =>
+        const onLoadedMetadata = () => {
             setDuration(audio.duration);
+        };
+
             audio.addEventListener("loadedmetadata", onLoadedMetadata);
             audio.src = audioUrl;
 
@@ -22,9 +24,5 @@ export function AudioContext(audioUrl) {
             };
         }, [audioUrl]);
 
-        if (duration === null) return null;
-        if (isNaN(duration) || duration === 0) return "0 min 0 secs";
-        const minutes = Math.floor(duration / 60);
-        const seconds = Math.floor(duration % 60);
-        return `${minutes} min ${seconds} secs`;
+        return duration
     };
