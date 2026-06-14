@@ -72,6 +72,9 @@ export default function Auth({ onClose, mode, setMode }) {
         password,
       );
       const user = userCredential.user;
+
+      await ensureSubscription(user.uid);
+      
       setError("");
       afterAuth();
     } catch (error) {
@@ -113,7 +116,8 @@ export default function Auth({ onClose, mode, setMode }) {
               <button
                 className="btn guest__btn--wrapper"
                 onClick={async () => {
-                  await signInAnonymously(auth);
+                  const result = await signInAnonymously(auth);
+                  await ensureSubscription(result.user.uid);
                   afterAuth();
                 }}
               >

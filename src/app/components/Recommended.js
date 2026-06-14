@@ -5,6 +5,13 @@ import { useEffect, useState } from "react";
 export default function Recommended() {
   const [books, setBooks] = useState([]);
   const [loading, setLoading] = useState(true);
+  
+  const formatDuration = (seconds) => {
+    if (!seconds || isNaN(seconds)) return "0 min 0 secs";
+    const mins = Math.floor(seconds / 60);
+    const secs = Math.floor(seconds % 60);
+    return `${mins} min ${secs} secs`;
+  };
 
   useEffect(() => {
     async function fetchRecommendedBooks() {
@@ -103,7 +110,7 @@ export default function Recommended() {
                     </svg>
                   </div>
                   <div className="recommended__book--details-text">
-                    {book.duration}
+                    {formatDuration(book.duration)}
                   </div>
                 </div>
                 <div className="recommended__book--details">

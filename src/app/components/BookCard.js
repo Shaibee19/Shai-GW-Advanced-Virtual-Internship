@@ -6,10 +6,10 @@ export default function BookCard({ book }) {
   const duration = useAudioContext(book.audioLink);
 
   const formatDuration = (seconds) => {
-        if (!seconds || isNaN(seconds)) return "0 min 0 secs";
-        const minutes = Math.floor(seconds / 60);
-        const seconds = Math.floor(seconds % 60);
-        return `${minutes} min ${seconds} secs`;
+    if (!seconds || isNaN(seconds)) return "0 min 0 secs";
+    const mins = Math.floor(seconds / 60);
+    const secs = Math.floor(seconds % 60);
+    return `${mins} min ${secs} secs`;
   };
 
   return (
