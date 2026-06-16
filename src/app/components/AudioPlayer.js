@@ -1,5 +1,8 @@
 import React, { useState, useRef, useEffect } from "react";
 import { RiReplay10Fill, RiForward10Line } from "react-icons/ri";
+import { doc, updateDoc, arrayUnion } from "firebase/firestore";
+import { db } from "@/app/firebase";
+import { useAuth } from "@/app/context/AuthContext";
 
 export default function AudioPlayer({ book }) {
   // State variables
@@ -81,24 +84,31 @@ export default function AudioPlayer({ book }) {
   const progressPercent = duration ? (currentTime / duration) * 100 : 0;
 
   // Mark book as finished when audio ends
+  const { user } = useAuth();
+  
   useEffect(() => {
-    if (!audioRef.current) return; // prevents the crash
+    if (!audioRef.current || !user) return; // prevents the crash
 
     audioRef.current.onended = async () => {
+      try {
       console.log("Audio finished!");
       const ref = doc(db, "users", user.uid);
+
       await updateDoc(ref, {
         finished: arrayUnion({
           id: book.id,
           title: book.title,
           author: book.author,
           imageLink: book.imageLink,
-          duration: book.duration,
+          duration: duration,
           rating: book.averageRating,
         }),
       });
+    } catch (error) {
+      console.error("Error updating finished books:", error);
+    }
     };
-  }, [audioRef.current]);
+  }, [audioRef.current, user, book, duration]);
 
   return (
     <div className="audio__wrapper">

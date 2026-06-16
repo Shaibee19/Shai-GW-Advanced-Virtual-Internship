@@ -1,30 +1,45 @@
 "use client";
 
-import BookSkeleton from "@/app/components/BookSkeleton";
-import Modal from "../../components/Modal";
-import Auth from "../../components/Auth";
-import Searchbar from "@/app/components/Searchbar";
-import Sidebar from "@/app/components/Sidebar";
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import { useAuth } from "../../context/AuthContext";
 import { db } from "../../firebase";
 import { doc, getDoc, updateDoc, arrayUnion, setDoc } from "firebase/firestore";
+import Sidebar from "@/app/components/Sidebar";
+import Searchbar from "@/app/components/Searchbar";
+import Modal from "../../components/Modal";
+import Auth from "../../components/Auth";
+import BookCard from "@/app/components/BookCard";
+import BookSkeleton from "@/app/components/BookSkeleton";
 import { IoBookmarkOutline, IoBookmark } from "react-icons/io5";
+import useAudioContext from "@/app/context/useAudioContext";
+import { finished } from "stream";
 
 export default function BookPage() {
   const { id } = useParams();
   const { user } = useAuth();
   const [book, setBook] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [searchResults, setSearchResults] = useState([]);
   const [subscription, setSubscription] = useState(null);
+  const [isSaved, setIsSaved] = useState(false);
+  const [searchResults, setSearchResults] = useState([]);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
   const [authMode, setAuthMode] = useState("login");
-  const [sidebarOpen, setSidebarOpen] = useState(false);
-  const [isSaved, setIsSaved] = useState(false);
 
-  // Fetch book details
+  // AUDIO CONTEXT
+  const audioContext = useAudioContext(book?.audioLink);
+
+  const formatDuration = (seconds) => {
+    if (!seconds || isNaN(seconds)) return "00:00";
+    const mins = Math.floor(seconds / 60);
+    const secs = Math.floor(seconds % 60);
+    return `${mins.toString().padStart(2, "0")}:${secs
+      .toString()
+      .padStart(2, "0")}`;
+  };
+
+  // FETCH BOOK DETAILS
   useEffect(() => {
     async function fetchBook() {
       try {
@@ -34,7 +49,7 @@ export default function BookPage() {
         const data = await res.json();
         setBook(data);
       } catch (err) {
-        console.error(err);
+        console.error("Error fetching book:", err);
       } finally {
         setLoading(false);
       }
@@ -43,14 +58,16 @@ export default function BookPage() {
     fetchBook();
   }, [id]);
 
-  // Fetch subscription info
+  // FETCH USER SUBSCRIPTION
   useEffect(() => {
     if (!user) return;
+
     const fetchSubscription = async () => {
       const ref = doc(db, "users", user.uid);
       const snap = await getDoc(ref);
-      if (snap.exists() && snap.data().subscription) {
-        setSubscription(snap.data().subscription);
+
+      if (snap.exists()) {
+        setSubscription(snap.data().subscription || { plan: "basic" });
       } else {
         setSubscription({ plan: "basic" });
       }
@@ -58,26 +75,51 @@ export default function BookPage() {
     fetchSubscription();
   }, [user]);
 
-  // Add book to library
+  // CHECK IF BOOK IS IN LIBRARY
+  useEffect(() => {
+    if (!user || !book) return;
+
+    const checkSaved = async () => {
+      const ref = doc(db, "users", user.uid);
+      const snap = await getDoc(ref);
+
+      if (snap.exists()) {
+        const library = snap.data().library || [];
+        setIsSaved(library.some((item) => item.id === book.id));
+      }
+    };
+
+    checkSaved();
+  }, [user, book]);
+
+  // ADD OR REMOVE BOOK FROM LIBRARY
   const handleAddToLibrary = async () => {
     if (!user) {
       setAuthMode("login");
       setIsAuthModalOpen(true);
-      setIsSaved(!isSaved);
       return;
     }
+
     try {
       const ref = doc(db, "users", user.uid);
       const snap = await getDoc(ref);
 
-      let library = snap.exists() && snap.data().library ? snap.data().library : [];
+      if (!snap.exists()) {
+        await setDoc(ref, { 
+          library: [],
+          finished: [],
+          subscription: { plan: "basic", status: "active", periodEnd: null } 
+        });
+      }
 
+      const library = snap.data()?.library || [];
       const exists = library.some((item) => item.id === book.id);
 
       if (exists) {
       // REMOVE BOOK
       const updated = library.filter((item) => item.id !== book.id);
       await updateDoc(ref, { library: updated });
+      setIsSaved(false);
       alert("Removed from your library");
       } else {
         // ADD BOOK
@@ -87,11 +129,12 @@ export default function BookPage() {
             title: book.title ?? "",
             author: book.author ?? "",
             imageLink: book.imageLink ?? "",
-            duration: book.duration ?? "",
+            duration: book.duration || 0,
             summary: book.summary ?? "",
             keyIdeas: book.keyIdeas ?? [],
           }),
         }); //{ merge: true }); Creates the doc if missing and merges data
+        setIsSaved(true);
         alert("Book added to your library!");
       }
     } catch (err) {
@@ -99,7 +142,7 @@ export default function BookPage() {
     }
   };
 
-  // Handle Read/Listen click
+  // HANDLE READ/ LISTEN ACCESS
   const handleAccess = () => {
     if (book.subscriptionRequired && subscription?.plan === "basic") {
       window.location.href = "/choose-plan";
@@ -108,53 +151,10 @@ export default function BookPage() {
     }
   };
 
-  // Format duration text
-  const formatDurationText = (time) => {
-    const seconds = Number(time);
-    if (!seconds || isNaN(seconds)) return "00:00";
-
-    const minutes = Math.floor(seconds / 60);
-    const secs = Math.floor(seconds % 60);
-
-    return `${minutes.toString().padStart(2, "0")}:${secs.toString().padStart(2, "0")}`;
-  };
-
-  // Check if book is in user's library
-  useEffect(() => {
-  if (!user || !book) return;
-
-  const checkSaved = async () => {
-    const ref = doc(db, "users", user.uid);
-    const snap = await getDoc(ref);
-    if (snap.exists()) {
-      const library = snap.data().library || [];
-      setIsSaved(library.some((item) => item.id === book.id));
-    }
-  };
-
-  checkSaved();
-}, [user, book]);
-
+  // SKELETON LOADING
   if (loading)
-    return (
-      <div className="inner__book--skeleton">
-        <div className="inner__book--skeleton-content">
-          <div className="skeleton" style={{ width: "70%", height: "32px", marginBottom: "16px", }}></div>
-          <div className="skeleton" style={{ width: "40%", height: "32px", marginBottom: "16px", }}></div>
-          <div className="skeleton" style={{ width: "100%", height: "32px", marginBottom: "16px", }}></div>
-          <div className="skeleton" style={{ width: "45%", height: "64px", marginBottom: "16px", }}></div>
-          <div className="skeleton" style={{ width: "50%", height: "32px", marginBottom: "16px", }}></div>
-          <div className="skeleton" style={{ width: "20%", height: "32px", marginBottom: "16px", }}></div>
-          <div className="skeleton" style={{ width: "50%", height: "64px", marginBottom: "16px", }}></div>
-          <div className="skeleton" style={{ width: "80%", height: "180px", marginBottom: "16px", }}></div>
-          <div className="skeleton" style={{ width: "80%", height: "268px" }}></div>
-        </div>
+    return <BookSkeleton />;
 
-        <div className="inner__book--skeleton-img">
-          <div className="skeleton" style={{ width: "300px", height: "300px", marginBottom: "16px", }}></div>
-        </div>
-      </div>
-    );
   if (!book) return <div>Book not found</div>;
 
   return (
@@ -187,7 +187,9 @@ export default function BookPage() {
               {searchResults.length > 0 && (
                 <div className="search__results">
                   {searchResults.map((book, index) => (
-                    <BookCard key={book.id || index} book={book} />
+                    <a href={`/book/${book.id}`} key={book.id || index}>
+                      <BookCard book={book} />
+                    </a>
                   ))}
                 </div>
               )}
@@ -195,6 +197,7 @@ export default function BookPage() {
               <div className="row">
                 <div className="container">
                   <div className="inner__wrapper">
+                    {/* LEFT SIDE */}
                     <div className="inner__book">
                       <div className="inner-book__title">{book.title}</div>
                       {book.subscriptionRequired && (
@@ -211,6 +214,7 @@ export default function BookPage() {
                       <div className="inner-book__wrapper">
                         <div className="inner-book__description--wrapper">
 
+                          {/* RATING */}
                           <div className="inner-book__description">
                             <div className="inner-book__icon">
                               <svg stroke="currentColor" fill="currentColor" strokeWidth="0" viewBox="0 0 1024 1024" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg">
@@ -225,6 +229,7 @@ export default function BookPage() {
                             </div>
                           </div>
 
+                          {/* DURATION */}
                           <div className="inner-book__description">
                             <div className="inner-book__icon">
                               <svg stroke="currentColor" fill="currentColor" strokeWidth="0" viewBox="0 0 1024 1024" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg">
@@ -233,10 +238,11 @@ export default function BookPage() {
                               </svg>
                             </div>
                             <div className="inner-book__duration">
-                              {formatDurationText(book.duration)}
+                              {formatDuration(audioContext)}
                             </div>
                           </div>
 
+                          {/* TYPE */}
                           <div className="inner-book__description">
                             <div className="inner-book__icon">
                               <svg stroke="currentColor" fill="currentColor" strokeWidth="0" viewBox="0 0 1024 1024" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg">
@@ -246,6 +252,7 @@ export default function BookPage() {
                             <div className="inner-book__type">{book.type}</div>
                           </div>
 
+                          {/* KEY IDEAS */}
                           <div className="inner-book__description">
                             <div className="inner-book__icon">
                               <svg stroke="currentColor" fill="none" strokeWidth="0" viewBox="0 0 24 24" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg">
@@ -293,7 +300,8 @@ export default function BookPage() {
                       {/* BOOKMARK BUTTON */}
                       <div
                         className="inner-book__bookmark"
-                        >
+                        onClick={handleAddToLibrary}
+                      >
                         <div className="inner-book__bookmark--icon">
                           {isSaved ? (
                             <IoBookmark />
@@ -301,24 +309,21 @@ export default function BookPage() {
                             <IoBookmarkOutline />
                           )}
                         </div>
-                        <div className="inner-book__bookmark--text"
-                        onClick={handleAddToLibrary}>
+                        <div className="inner-book__bookmark--text">
                           {isSaved ? "Saved in My Library" : "Add title to My Library"}
                         </div>
                       </div>
+
+                      {/* TAGS */}
                       <div className="inner-book__secondary--title">
                         What's it about?
                       </div>
-
-                      {/* TAGS */}
                       <div className="inner-book__tags--wrapper">
-                        <div className="inner-book__tag">
                           {book.tags.map((tag) => (
                             <span key={tag} className="book__tag">
                               {tag}
                             </span>
                           ))}
-                        </div>
                       </div>
 
                       {/* BOOK DESCRIPTION */}
@@ -335,6 +340,7 @@ export default function BookPage() {
                       </div>
                     </div>
 
+                    {/* RIGHT SIDE */}
                     <div className="inner-book--img-wrapper">
                       <figure
                         className="book__image--wrapper"
@@ -348,7 +354,6 @@ export default function BookPage() {
                           className="book__image"
                           src={book.imageLink}
                           alt={book.title}
-                          style={{ display: "block" }}
                         />
                       </figure>
                     </div>

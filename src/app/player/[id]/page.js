@@ -59,7 +59,9 @@ export default function BookSummary() {
               {searchResults.length > 0 && (
                 <div className="search__results">
                   {searchResults.map((book) => (
-                    <BookCard key={book.id || index} book={book} />
+                    <a href={`/book/${book.id}`} key={book.id || index}>
+                      <BookCard book={book} />
+                    </a>
                   ))}
                 </div>
               )}

@@ -1,10 +1,23 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import useAudioContext from "../context/useAudioContext";
 
 export default function Suggested() {
   const [books, setBooks] = useState([]);
   const [loading, setLoading] = useState(true);
+
+  // AUDIO CONTEXT
+  const audioContext = useAudioContext(books?.audioLink);
+
+  const formatDuration = (seconds) => {
+    if (!seconds || isNaN(seconds)) return "00:00";
+    const mins = Math.floor(seconds / 60);
+    const secs = Math.floor(seconds % 60);
+    return `${mins.toString().padStart(2, "0")}:${secs
+      .toString()
+      .padStart(2, "0")}`;
+  };
 
   useEffect(() => {
     async function fetchSuggestedBooks() {
@@ -103,7 +116,7 @@ export default function Suggested() {
                     </svg>
                   </div>
                   <div className="recommended__book--details-text">
-                    {book.duration}
+                    {formatDuration(audioContext)}
                   </div>
                 </div>
                 <div className="recommended__book--details">

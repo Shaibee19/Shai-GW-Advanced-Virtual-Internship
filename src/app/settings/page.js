@@ -11,6 +11,7 @@ import Image from "next/image";
 import settings from "../assets/login.png";
 import { db } from "@/app/firebase";
 import { doc, getDoc } from "firebase/firestore";
+import { useRouter } from "next/navigation";
 
 const Page = () => {
   const { user } = useAuth();
@@ -22,6 +23,7 @@ const Page = () => {
   const [subscription, setSubscription] = useState(null);
   const [loading, setLoading] = useState(true);
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const router = useRouter();
 
   useEffect(() => {
     if (!user) {
@@ -105,7 +107,9 @@ const Page = () => {
               {searchResults.length > 0 && (
                 <div className="search__results">
                   {searchResults.map((book) => (
-                    <BookCard key={book.id || index} book={book} />
+                    <a href={`/book/${book.id}`} key={book.id || index}>
+                      <BookCard book={book} />
+                    </a>
                   ))}
                 </div>
               )}
