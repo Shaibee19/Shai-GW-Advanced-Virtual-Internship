@@ -18,13 +18,12 @@ const Page = () => {
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
   const [authMode, setAuthMode] = useState("login");
   const [searchResults, setSearchResults] = useState([]);
-  const isLoggedIn = "";
-  // mode !== "login" && mode !== "signup"
   const [subscription, setSubscription] = useState(null);
   const [loading, setLoading] = useState(true);
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const router = useRouter();
 
+  // FETCH USER SUBSCRIPTION
   useEffect(() => {
     if (!user) {
       setLoading(false);
@@ -38,7 +37,10 @@ const Page = () => {
         const snap = await getDoc(ref);
 
         if (snap.exists()) {
-          setSubscription(snap.data().subscription?.plan ?? "basic");
+          // STORING THE FULL OBJECT, INSTEAD OF JUST THE PLAN
+          setSubscription(snap.data().subscription || { plan: "basic", status: "active" });
+        } else {
+          setSubscription({ plan: "basic", status: "active" });
         }
       } catch (err) {
         console.error(err);
@@ -117,8 +119,29 @@ const Page = () => {
               <div className="row">
                 <div className="container">
                   <div className="settings__wrapper">
+                    
+                    {/* LOGGED OUT */}
+                    {!user && (
+                      <div className="settings__login--wrapper">
+                        <Image src={settings} alt="settings login" priority />
+                        <div className="settings__login--text">
+                          Log in to your account to see your details.
+                        </div>
 
-                    {user ? (
+                        <button
+                          className="btn settings__login--btn"
+                          onClick={() => {
+                            setAuthMode("login");
+                            setIsAuthModalOpen(true);
+                          }}
+                        >
+                          Login
+                        </button>
+                      </div>
+                    )}
+
+                    {/* LOGGED IN */}
+                    {user && (
                       <>
                         <div className="section__title page__title">
                           Settings
@@ -128,7 +151,7 @@ const Page = () => {
                           <div className="settings__sub--title">
                             Your Subscription plan
                           </div>
-                          <div className="settings__text">{subscription}</div>
+                          <div className="settings__text">{subscription?.plan}</div>
                         </div>
 
                         <div className="setting__content">
@@ -136,28 +159,28 @@ const Page = () => {
                           <div className="settings__text">{user.email}</div>
                         </div>
                       </>
-                    ) : (
-                      <>
-                        <div className="settings__login--wrapper">
-                          <Image src={settings} alt="settings login" priority />
-                          <div className="settings__login--text">
-                            Log in to your account to see your details.
-                          </div>
+                    // ) : (
+                    //   <>
+                    //     <div className="settings__login--wrapper">
+                    //       <Image src={settings} alt="settings login" priority />
+                    //       <div className="settings__login--text">
+                    //         Log in to your account to see your details.
+                    //       </div>
 
-                          <button
-                            className="btn settings__login--btn"
-                            onClick={() => {
-                              setAuthMode("login");
-                              setIsAuthModalOpen(true);
-                            }}
-                          >
-                            Login
-                          </button>
-                        </div>
-                      </>
+                    //       <button
+                    //         className="btn settings__login--btn"
+                    //         onClick={() => {
+                    //           setAuthMode("login");
+                    //           setIsAuthModalOpen(true);
+                    //         }}
+                    //       >
+                    //         Login
+                    //       </button>
+                    //     </div>
+                    //   </>
                     )}
                     
-                    {subscription === "basic" && (
+                    {subscription?.plan === "basic" && (
                       <button
                         className="btn"
                         onClick={() => router.push("/choose-plan")}

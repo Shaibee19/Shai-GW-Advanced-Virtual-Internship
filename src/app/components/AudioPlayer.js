@@ -85,9 +85,9 @@ export default function AudioPlayer({ book }) {
 
   // Mark book as finished when audio ends
   const { user } = useAuth();
-  
+
   useEffect(() => {
-    if (!audioRef.current || !user) return; // prevents the crash
+    if (!audioRef.current || !user || !book) return; // prevents the crash
 
     audioRef.current.onended = async () => {
       try {

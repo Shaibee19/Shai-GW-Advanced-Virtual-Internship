@@ -477,15 +477,15 @@ button:disabled {
 }
 
 .for-you__title {
-  font-size: 22px;
-  font-weight: 700;
+  font-size: 24px;
+  font-weight: 600;
   color: #032b41;
-  margin-bottom: 16px;
+  margin-top: 32px;
 }
 
 .for-you__sub--title {
-  font-weight: 300;
-  color: #394547;
+  font-size: 16px;
+  color: #6b7b83;
   margin-bottom: 16px;
 }
 
@@ -844,6 +844,11 @@ button:disabled {
   font-weight: 500;
 }
 
+.book__link {
+  text-decoration: none;
+  color: inherit;
+}
+
 .keyidea {
   margin-bottom: 16px;
   border: 1px solid #e5e7eb;
@@ -869,7 +874,6 @@ button:disabled {
   letter-spacing: 0.3px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
-
 
 /* SEARCH BOOK */
 
@@ -923,7 +927,6 @@ button:disabled {
   color: #6b7b83;
 }
 
-
 /* INNER BOOK */
 
 .inner__wrapper {
@@ -944,7 +947,7 @@ button:disabled {
 }
 
 .inner-book__title {
-font-size: 32px;
+  font-size: 32px;
 }
 
 .inner-book__premium--pill {
@@ -1110,10 +1113,13 @@ font-size: 32px;
   gap: 32px;
 }
 
-
 /* SUMMARY */
 
 .summary {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+  margin-top: 32px;
   position: relative;
   width: 100%;
   overflow-y: auto;
@@ -1122,8 +1128,9 @@ font-size: 32px;
 
 .audio__book--summary {
   white-space: pre-line;
+  flex: 2;
   padding: 24px;
-  max-width: 800px;
+  max-width: 600px;
   margin: 0 auto;
 }
 
@@ -1131,14 +1138,14 @@ font-size: 32px;
   color: #032b41;
   font-size: 24px;
   border-bottom: 1px solid #e1e7ea;
-  margin-bottom: 32px;
-  padding-bottom: 16px;
+  margin-bottom: 16px;
   line-height: 1.5;
+  font-weight: 700;
 }
 
 .audio__book--summary-text {
   white-space: pre-line;
-  line-height: 1.4;
+  line-height: 1.6;
   color: #032b41;
 }
 
@@ -1162,8 +1169,8 @@ font-size: 32px;
 }
 
 audio {
-    width: 300px;
-    height: 54px;
+  width: 300px;
+  height: 54px;
 }
 
 .audio__track--wrapper {
@@ -1224,6 +1231,13 @@ audio {
 .audio__time {
   color: #fff;
   font-size: 14px;
+}
+
+.audio-player__wrapper {
+  flex: 1;
+  min-width: 300px;
+  max-width: 400px;
+  margin-top: 24px;
 }
 
 /* SETTINGS SECTION */
@@ -1306,7 +1320,6 @@ audio {
   font-size: 20px;
   line-height: 1.9;
 }
-
 
 /* PLAN PAGE */
 
@@ -1810,7 +1823,6 @@ audio {
   transform: translateY(-4px);
 }
 
-
 @media (max-width: 768px) {
   .page__layout {
     grid-template-columns: 1fr;
@@ -2011,6 +2023,12 @@ audio {
 }
 
 @media (min-width: 768px) {
+  .summary {
+    flex-direction: row;
+    align-items: flex-start;
+    justify-content: space-between;
+  }
+
   .nav__list--mobile {
     display: none;
   }
@@ -2018,7 +2036,7 @@ audio {
   .page__content {
     margin-left: 240px;
   }
-  
+
   .inner__wrapper {
     flex-direction: row;
     justify-content: space-between;
@@ -2034,19 +2052,23 @@ audio {
     display: flex;
     justify-content: center;
   }
-  
+
   .inner__book--skeleton {
     flex-direction: row;
     justify-content: space-between;
   }
-  
+
   .inner__book--skeleton-content {
     flex: 2;
   }
-  
+
   .inner__book--skeleton-img {
     flex: 1;
     display: flex;
     justify-content: center;
-}
+  }
+
+  .audio-player__wrapper {
+    margin-top: 0;
+  }
 }

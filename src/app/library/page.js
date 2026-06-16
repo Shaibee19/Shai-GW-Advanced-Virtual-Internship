@@ -129,7 +129,7 @@ export default function Library() {
                       ) : (
                         <div className="library__grid">
                           {savedBooks.map((book) => (
-                            <a href={`/book/${book.id}`} key={book.id}>
+                            <a className="book__link" href={`/book/${book.id}`} key={book.id}>
                               <BookCard book={book} />
                             </a>
                           ))}
