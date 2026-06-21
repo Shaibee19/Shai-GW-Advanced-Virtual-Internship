@@ -85,10 +85,10 @@ export default function Selected() {
             </div>
           </div>
 
-          {/* PREMIUM PILL */}
+          {/* PREMIUM PILL
           {book.subscriptionRequired && (
             <div className="premium__pill">Premium</div>
-          )}
+          )} */}
         </a>
       )}
     </>

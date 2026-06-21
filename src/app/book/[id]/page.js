@@ -120,7 +120,7 @@ export default function BookPage() {
       const updated = library.filter((item) => item.id !== book.id);
       await updateDoc(ref, { library: updated });
       setIsSaved(false);
-      alert("Removed from your library");
+      // alert("Removed from your library");
       } else {
         // ADD BOOK
         await updateDoc(ref, {
@@ -135,7 +135,7 @@ export default function BookPage() {
           }),
         }); //{ merge: true }); Creates the doc if missing and merges data
         setIsSaved(true);
-        alert("Book added to your library!");
+        // alert("Book added to your library!");
       }
     } catch (err) {
       console.error("Error adding book:", err);

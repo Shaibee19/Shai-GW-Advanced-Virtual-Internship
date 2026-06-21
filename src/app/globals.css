@@ -716,7 +716,8 @@ button:disabled {
 
 /* RECOMMENDED & SUGGESTED BOOKS */
 
-.for-you__recommended--books {
+.for-you__recommended--books,
+.library__grid {
   display: flex;
   overflow-x: auto;
   gap: 16px;
@@ -725,11 +726,13 @@ button:disabled {
   margin-bottom: 32px;
 }
 
-.for-you__recommended--books a:hover {
+.for-you__recommended--books a:hover, 
+.library__grid a:hover {
   background-color: #f1f6f4;
 }
 
-.for-you__recommended--books::-webkit-scrollbar {
+.for-you__recommended--books::-webkit-scrollbar,
+.library__grid::-webkit-scrollbar {
   display: none;
 }
 
@@ -791,6 +794,24 @@ button:disabled {
   display: flex;
   width: 16px;
   height: 16px;
+}
+
+/* LIBRARY */
+
+.library__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 24px;
+  margin-top: 24px;
+}
+
+.library__grid .book {
+  cursor: pointer;
+  transition: transform 0.15s ease;
+}
+
+.library__grid .book:hover {
+  transform: translateY(-4px);
 }
 
 /* BOOK */
@@ -1126,6 +1147,10 @@ button:disabled {
   height: calc(100vh - 160px);
 }
 
+.summary::-webkit-scrollbar {
+  display: none;
+}
+
 .audio__book--summary {
   white-space: pre-line;
   flex: 2;
@@ -1215,6 +1240,8 @@ audio {
   background-color: #fff;
   width: 40px;
   height: 40px;
+  margin-left: 25px;
+  margin-right: 25px;
 }
 
 .audio__controls--btn-play svg {
@@ -1228,6 +1255,10 @@ audio {
   color: #fff;
 }
 
+.audio__progress--bar {
+  width: 800px;
+}
+
 .audio__time {
   color: #fff;
   font-size: 14px;
@@ -1236,7 +1267,7 @@ audio {
 .audio-player__wrapper {
   flex: 1;
   min-width: 300px;
-  max-width: 400px;
+  max-width: 800px;
   margin-top: 24px;
 }
 
@@ -1805,24 +1836,6 @@ audio {
   transition: opacity 0.2s;
 }
 
-/* LIBRARY */
-
-.library__grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-  gap: 24px;
-  margin-top: 24px;
-}
-
-.library__grid .book {
-  cursor: pointer;
-  transition: transform 0.15s ease;
-}
-
-.library__grid .book:hover {
-  transform: translateY(-4px);
-}
-
 @media (max-width: 768px) {
   .page__layout {
     grid-template-columns: 1fr;
@@ -2029,9 +2042,9 @@ audio {
     justify-content: space-between;
   }
 
-  .nav__list--mobile {
+  /* .nav__list--mobile {
     display: none;
-  }
+  } */
 
   .page__content {
     margin-left: 240px;

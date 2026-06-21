@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import useAudioContext from "../context/useAudioContext";
 
-export default function Recommended() {
+export default function Recommended({}) {
   const [books, setBooks] = useState([]);
   const [loading, setLoading] = useState(true);
 
