@@ -3,6 +3,7 @@
 import Searchbar from "@/app/components/Searchbar";
 import Sidebar from "@/app/components/Sidebar";
 import BookCard from "@/app/components/BookCard";
+import SearchResultCard from "@/app/components/SearchResultCard";
 import Modal from "../components/Modal";
 import Auth from "../components/Auth";
 import Image from "next/image";
@@ -106,7 +107,7 @@ export default function Library() {
                 <div className="search__results">
                   {searchResults.map((book) => (
                     <a href={`/book/${book.id}`} key={book.id || index}>
-                      <BookCard book={book} />
+                      <SearchResultCard book={book} />
                     </a>
                   ))}
                 </div>
@@ -129,9 +130,7 @@ export default function Library() {
                       ) : (
                         <div className="library__grid">
                           {savedBooks.map((book) => (
-                            <a className="book__link" href={`/book/${book.id}`} key={book.id}>
-                              <BookCard book={book} />
-                            </a>
+                              <BookCard key={book.id} book={book} />
                           ))}
                         </div>
                       )}
@@ -146,9 +145,7 @@ export default function Library() {
                       ) : (
                         <div className="library__grid">
                           {finishedBooks.map((book) => (
-                          <a href={`/book/${book.id}`} key={book.id}>
-                            <BookCard book={book} />
-                          </a>
+                            <BookCard key={book.id} book={book} />
                           ))}
                         </div>
                       )}

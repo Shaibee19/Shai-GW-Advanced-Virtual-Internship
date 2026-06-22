@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Sidebar from "../components/Sidebar";
 import Searchbar from "../components/Searchbar";
-import BookCard from "../components/BookCard";
+import SearchResultCard from "../components/SearchResultCard";
 import Selected from "../components/Selected";
 import Recommended from "../components/Recommended";
 import Suggested from "../components/Suggested";
@@ -48,7 +48,7 @@ const Page = () => {
                 <div className="search__results">
                   {searchResults.map((book) => (
                     <a href={`/book/${book.id}`} key={book.id || index}>
-                      <BookCard book={book} />
+                      <SearchResultCard book={book} />
                     </a>
                   ))}
                 </div>

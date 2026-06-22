@@ -6,7 +6,7 @@ import AudioPlayer from "@/app/components/AudioPlayer";
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import { useFontSize } from "@/app/context/FontSizeContext";
-import BookCard from "@/app/components/BookCard";
+import SearchResultCard from "@/app/components/SearchResultCard";
 
 export default function BookSummary() {
   const { id } = useParams();
@@ -60,7 +60,7 @@ export default function BookSummary() {
                 <div className="search__results">
                   {searchResults.map((book) => (
                     <a href={`/book/${book.id}`} key={book.id || index}>
-                      <BookCard book={book} />
+                      <SearchResultCard book={book} />
                     </a>
                   ))}
                 </div>

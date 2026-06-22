@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import { useAuth } from "../context/AuthContext";
 import Searchbar from "@/app/components/Searchbar";
-import BookCard from "../components/BookCard";
+import SearchResultCard from "@/app/components/SearchResultCard";
 import Sidebar from "@/app/components/Sidebar";
 import Modal from "@/app/components/Modal";
 import Auth from "@/app/components/Auth";
@@ -110,7 +110,7 @@ const Page = () => {
                 <div className="search__results">
                   {searchResults.map((book) => (
                     <a href={`/book/${book.id}`} key={book.id || index}>
-                      <BookCard book={book} />
+                      <SearchResultCard book={book} />
                     </a>
                   ))}
                 </div>

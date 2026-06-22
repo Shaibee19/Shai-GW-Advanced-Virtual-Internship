@@ -9,7 +9,7 @@ import Sidebar from "@/app/components/Sidebar";
 import Searchbar from "@/app/components/Searchbar";
 import Modal from "../../components/Modal";
 import Auth from "../../components/Auth";
-import BookCard from "@/app/components/BookCard";
+import SearchResultCard from "@/app/components/SearchResultCard";
 import BookSkeleton from "@/app/components/BookSkeleton";
 import { IoBookmarkOutline, IoBookmark } from "react-icons/io5";
 import useAudioContext from "@/app/context/useAudioContext";
@@ -188,7 +188,7 @@ export default function BookPage() {
                 <div className="search__results">
                   {searchResults.map((book, index) => (
                     <a href={`/book/${book.id}`} key={book.id || index}>
-                      <BookCard book={book} />
+                      <SearchResultCard book={book} />
                     </a>
                   ))}
                 </div>
